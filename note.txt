@@ -1,0 +1,13 @@
+Two Pointers(start, end)
+    Usually used when the array is sorted. 
+    Finding a target by narrowing down the range from the [start, end].
+    
+    #Format
+        while(start <= end)
+            if(something) // Found the answer
+                return result;
+            else if 
+                start++;
+            else 
+                end--;
+    
