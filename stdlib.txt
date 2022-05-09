@@ -1,0 +1,1 @@
+reverse(s.begin(), s.end()) => reverse from s.begin() to s.end();

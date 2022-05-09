@@ -11,3 +11,22 @@ Two Pointers(start, end)
             else 
                 end--;
     
+DFS
+    Find constraint satisfaction paths or routes.
+        -> sometimes go backward from destination and checking all paths as a successful path.
+            ex) 130. 
+
+Sliding Window
+    [0 1 2 3 4 5 6 7 8] (SIZE : N)
+    {A B C}             (SIZE : M)
+      {A B C}
+        {A B C}
+    Time complexity : O(MN) => O(N) possible
+    When moving a Window, there are duplicate calculation(the indices that are redundant)
+    So, just -previous starting point + previous SUM + current end = current window's result .
+    Just update the result by subtrating and adding an offset
+    EX) Algo1-567
+    0 1 2 3 4 5 6
+    v v v => func(0) + func(1) + func(2) = prevSum
+      v v v => preSum - func(0) + func(3) = prevSum
+        v v v => preSum - func(1) + func(4) = prevSum ... on & on
