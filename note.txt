@@ -30,3 +30,17 @@ Sliding Window
     v v v => func(0) + func(1) + func(2) = prevSum
       v v v => preSum - func(0) + func(3) = prevSum
         v v v => preSum - func(1) + func(4) = prevSum ... on & on
+    
+    Using A for loop(when the windowSize is changing) => algo2 Sliding Window
+        for(int end = 0; end < N; end++){
+            while(condition) => shrink the window until it meets condition
+                start++; 
+        }
+
+
+BackTracking
+    Generate permutations and combinations(algo2)
+    -> puts conditions 
+    how to make a unique perms and combs?
+    1. using a Map
+    2. sort and skip the same value 
