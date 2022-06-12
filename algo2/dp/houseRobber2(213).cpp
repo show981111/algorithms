@@ -4,6 +4,8 @@
  * If there are more constraints, then we should divide cases according to that
  * constraints. The key is each case should be independant!
  *
+ * This solution:
+ * Bottom-up DP
  */
 
 class Solution
