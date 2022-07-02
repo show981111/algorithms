@@ -44,3 +44,36 @@ BackTracking
     how to make a unique perms and combs?
     1. using a Map
     2. sort and skip the same value 
+
+WORTH NOTING
+    http://codeforces.com/blog/entry/66660 
+    string a; 
+    a = a + "xy" O(N) vs a += "xy" O(1) vs a = move(a) + "xy" O(1)
+    first one makes copy of "a", and then append
+
+lValue vs rValue
+    https://www.youtube.com/watch?v=fbYknr-HPYE&ab_channel=TheCherno
+    rValue => something that is "temporary", something that is not able to be assigned a value
+    lValue => something that has a location in Memory. it is possible to get value assigned.
+
+    int getValue() => returns rValue  => so getValue() = 5 (X)
+    int& getValue() => returns lValue => getValue() = 5 (O)
+    lValue reference : setValue(string& x);
+    rValue reference : setValue(string&& x);
+
+Move 
+    https://www.youtube.com/watch?v=ehMg6zvXuMY&ab_channel=TheCherno 
+    https://en.cppreference.com/w/cpp/utility/move 
+    std::move() => make something rvalue(T&&)[temporary]
+    So it just becomes a temporary object like 10 7 "asdas"... 
+    If that value is moved, it becomes empty...
+    string x = "hello";
+    string y = move(x); 
+    => x is empty, y is "hello", when "hello" is moved from x, x's pointer is set to nullptr!
+    and the actual data that pointer refers to is moved to y's pointer 
+    if we do not use move, then x = "hello", y = "hello"
+
+CPP NOTES
+    Class design
+        (copy constructor, destrurtor, = operator overloading)!!
+        with default constructor + (move constructor and move = operator overloading)

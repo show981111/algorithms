@@ -1,3 +1,10 @@
+/**
+ * @brief Finding how many characters to delete
+ * in order to make two strings equal
+ *  == finding the Longest Common Sequence! and just subtract to get differences!
+ *
+ */
+
 class Solution
 {
 public:
