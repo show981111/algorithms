@@ -15,8 +15,59 @@ DFS
     Find constraint satisfaction paths or routes.
         -> sometimes go backward from destination and checking all paths as a successful path.
             ex) 130. 
+    DFS(){
+        visited[src] = true;
+        for(neighbor : neighbors[src]){
+            if(!visited[neighbor] /* and other constraints*/){
+                DFS(neighbor); //push unvisited node to call stack!
+            }
+        }
+        // if we want to find all paths
+        visited[src] = false
+    }
+
+DFS & BFS 
+    WHERE SHOULD WE CHECK VISITED?
+    FOR BFS it does matter because nodes at same level could push the same node twice!
+    ex) A, B is in same level, C is neighbor of both A,B. then C is inserted twice.
+    
+    PATTERN A) make it visited when we add nodes to the queue
+    REMEMBER : for starting point, we cannot make it visited cause it is already in the queue
+    Thus, we should make it visited before!!
+        BFS(){
+            visited[src] = true; // set starting node to TRUE 
+            while(!q.empty()){
+                q.pop();
+                for(neighbor : neighbors[src]){
+                    if(!visited[neighbor] /* and other constraints*/){
+                        visited[neighbor] = true;
+                        q.push(neighbor);
+                    }
+                }
+            }
+        }
+    
+    PATTERN B) just push it, and check it when we pop it
+        BFS(){
+            while(!q.empty()){
+                cur = q.front();
+                q.pop()
+                if(visited[cur] /* or other constraints*/)
+                    continue;
+                visited[cur] = true;
+                
+                for(neighbor : neighbors[src]){
+                    q.push(neighbor);
+                }
+            }
+        }
+    
+    In general, pattern B takes more time and memory because it allows redundant push to queue
 
 Sliding Window
+    When should we use?? 
+    Searching through something consecutive and sequential(ex. substring)
+
     [0 1 2 3 4 5 6 7 8] (SIZE : N)
     {A B C}             (SIZE : M)
       {A B C}
@@ -31,14 +82,45 @@ Sliding Window
       v v v => preSum - func(0) + func(3) = prevSum
         v v v => preSum - func(1) + func(4) = prevSum ... on & on
     
+    Using this, proceeding the Sliding Window can be done in one loop.
+
     Using A for loop(when the windowSize is changing) => algo2 Sliding Window
         for(int end = 0; end < N; end++){
             while(condition) => shrink the window until it meets condition
                 start++; 
         }
-
+    
+    Different Pattern == two pointer (Grind > Sliding Window > 3)
+    We have "left" and "right" 
+    while(left < N && right < N)
+    {
+        if(something)
+            right++; //enlarge window
+        else
+            left++; //shrink window
+    }
 
 BackTracking
+    https://leetcode.com/problems/combinations/discuss/844096/backtracking-cheatsheet-simple-solution
+
+    BackTracking Pattern
+    *********
+    def backtrack(candidate):
+        if find_solution(candidate):
+            output(candidate)
+            return
+        
+        # iterate all possible candidates.
+        for next_candidate in list_of_candidates:
+            if is_valid(next_candidate):
+                # try this partial candidate solution
+                place(next_candidate)
+                # given the candidate, explore further.
+                backtrack(next_candidate)
+                # backtrack
+                remove(next_candidate)
+    *********
+
     Generate permutations and combinations(algo2)
     -> puts conditions 
     how to make a unique perms and combs?
@@ -51,29 +133,28 @@ WORTH NOTING
     a = a + "xy" O(N) vs a += "xy" O(1) vs a = move(a) + "xy" O(1)
     first one makes copy of "a", and then append
 
-lValue vs rValue
-    https://www.youtube.com/watch?v=fbYknr-HPYE&ab_channel=TheCherno
-    rValue => something that is "temporary", something that is not able to be assigned a value
-    lValue => something that has a location in Memory. it is possible to get value assigned.
+Cycle Detection (Grind > graph > course schedule)
+    Undirected:
+        DFS/BFS both possible, If we are visiting the node again
+        but that node is not the parent, cycle!
+        - in undirected graph, the graph has a cycle if it is not a MST!
+        Union Find. -> cannot be used in directed graph!
+        EX) 1 -> 2 -> 3, 1 -> 3 is not cyclic if it is directed. but cyclic if
+        it is undirected
+        If it is connected graph, #edge == #node -1: acyclic else, cyclic
+    Directd:
+        DFS: utilize the process of finding path. Nodes in call stack
+            means they are in the same path. 
+            -> DFS is naturally topological sort
+        BFS: utilize topological sort
+            -> using a indegree. Put nodes with 0 indegree,
+            pop and decrease the indegree of neighbors. 
+            Repeat this process until queue is empty
+    
 
-    int getValue() => returns rValue  => so getValue() = 5 (X)
-    int& getValue() => returns lValue => getValue() = 5 (O)
-    lValue reference : setValue(string& x);
-    rValue reference : setValue(string&& x);
+Prim's, Kruskal's algo -> only for Undirected graph!
 
-Move 
-    https://www.youtube.com/watch?v=ehMg6zvXuMY&ab_channel=TheCherno 
-    https://en.cppreference.com/w/cpp/utility/move 
-    std::move() => make something rvalue(T&&)[temporary]
-    So it just becomes a temporary object like 10 7 "asdas"... 
-    If that value is moved, it becomes empty...
-    string x = "hello";
-    string y = move(x); 
-    => x is empty, y is "hello", when "hello" is moved from x, x's pointer is set to nullptr!
-    and the actual data that pointer refers to is moved to y's pointer 
-    if we do not use move, then x = "hello", y = "hello"
+Dijkstra -> Both Undirected + Directd!
 
-CPP NOTES
-    Class design
-        (copy constructor, destrurtor, = operator overloading)!!
-        with default constructor + (move constructor and move = operator overloading)
+Prefix Tree(trie) - look grind > graph > prefixTree
+    each node has children array with alphabets, and boolean value(isWord)
