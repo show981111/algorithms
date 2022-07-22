@@ -158,3 +158,18 @@ Dijkstra -> Both Undirected + Directd!
 
 Prefix Tree(trie) - look grind > graph > prefixTree
     each node has children array with alphabets, and boolean value(isWord)
+
+Compare Two String, especially comparing pattern or sequence,
+    => using a 2D memo, DP
+        ex) algo2 > DP > Longest Common subsequence, LongestPalindrome or DP > 44
+    TIP) we use empty character at 0 index to use as a buffer.
+        So, memo[0][0] = true, but else is false because letter != ' '
+        (if some special letter is equal to ' ', then it could be true)
+
+
+Binary Searching
+    1) break condition, start > end
+    2) how to divide the region? if not in A, it should be U - A 
+    Key is finding sorted part. if some part is sorted,
+    sorted[start] < sorted[end] we can know the key element is in that
+    range just by compare the start and end of sorted part!

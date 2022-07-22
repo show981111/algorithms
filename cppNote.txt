@@ -69,3 +69,7 @@ Optional
     if(somaValue.has_value()) ... 
     This is used to differentiate empty(no value) with other values.
     It is good for initializing or giving a default!
+
+CPP vector erase() and clear()
+    Time complexity is O(N)!!
+    pop_back() is O(1)
