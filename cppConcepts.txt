@@ -1,0 +1,7 @@
+In C++, static members don't belong to the instances of class. 
+they don't increase size of instances and class even by 1 bit! 
+They don't incease size of derived class too
+
+Vtable is a static member. All class instance has one virtual pointer
+that points to Vtable! No matter how many virtual functions do we have,
+only one virtual pointer! so just add 8byte to each class instance!

@@ -35,6 +35,9 @@ VECTOR
         If last==end() prior to removal, then the updated end() iterator is returned.
         If [first, last) is an empty range, then last is returned.
     .back() returns reference. So we can do v.back() = 7 (it will change!)
+    .insert(pos, val) or
+    .insert(pos, iter.begin, iter.end)
+        Insert elements right before the pos
 
 Priority Queue<item, container, compare>
     Compare class should overload () operator
@@ -73,3 +76,40 @@ Optional
 CPP vector erase() and clear()
     Time complexity is O(N)!!
     pop_back() is O(1)
+
+lower_bound(begin, end, val , [comparator for "<"])
+    - comp(elem, val) = false 인 첫번째 아이템 (elem >= val 인 첫 아이템)
+        (elem < val)
+    ex) low = lower_bound (v.begin(), v.end(), 20, 
+            [](const int& elem, const int& val){
+                return elem <= val;
+        }); 
+        This makes lower_bound like an upper_bound
+        (will return the first elem such that !(elem <= val), which means elem > val )
+upper_bound(begin, end, val , [comparator for "<"])
+    - comp(val, elem) = true 인 첫번쨰 아이템  (elem > val 인 첫 아이템)
+        (val < elem)
+    ex)  auto it = upper_bound(mp[key].begin(), mp[key].end(), timestamp, 
+                                [](const int &val, const pair<int, string > &a){
+            return val < a.first;
+        });
+    
+    Getting the last element such that a < b => use Upper bound, and decrement the index!!
+    * Upper_bound gets the first element such that val < elem
+    * lower_bound gets the first element such that val <= elem
+
+std::list(Doubly Linked List)
+    https://cplusplus.com/reference/list/list/?kw=list 
+    push to front and back, popping from front and back are constants.
+    If we now the position of element to erase,
+    list.erase(pos) => constant! 
+        This is the key difference from vector and deque
+            => vector and deque should shift elements, so erase by position takes Linear
+    Cannot use std::sort(begin, end, Compare), use std::list.sort(Compare)
+
+Be careful with type conversion! (int, size_t ,double) => division and subtraction!
+    int x = 1, y = 2;
+    (x + y) /2 => returns int because int is divided (1)
+    (double)(x + y) /2 => returns Double because double is divided(1.5)
+    (double)((small.top() + big.top()) / 2) => returns double but incorrect (1) becaue int is divided,
+    so the result is 1 then 1 is converted to double, so it returns 1. 

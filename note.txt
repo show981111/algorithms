@@ -100,6 +100,27 @@ Sliding Window
             left++; //shrink window
     }
 
+    Just start from Exclusive! [L, R)
+    L = 0, R = 0; cur = INITIAL VALUE
+    While(L < SIZE && R < SIZE){
+        if(something)
+            cur += nums[R++];
+        else
+            cur -= nums[L++];
+        ## Key point here is when R == nums.size()
+        ## Is there a potential answer cases? (since exclusive!)
+        Usual pattern is, for each 'R', count or loop every possible
+        answer cases by shrinking window. Then, go to next step(R++, enlarge window).
+
+        The distinction of each step is containing 'R' or not! => helpful when counting (no overocunt!)
+        EX)713
+        // Shrink Window
+        while(condition) 
+            cur -= nums[L++];
+
+        //Update Answer 
+    }
+
 BackTracking
     https://leetcode.com/problems/combinations/discuss/844096/backtracking-cheatsheet-simple-solution
 
@@ -127,6 +148,10 @@ BackTracking
     1. using a Map
     2. sort and skip the same value 
 
+    Subset = getting combination for all k = 0 ~ n 
+    Thus, if we remove "if cur.size() == k" from genComb,
+    we can get subset of array!
+
 WORTH NOTING
     http://codeforces.com/blog/entry/66660 
     string a; 
@@ -142,14 +167,16 @@ Cycle Detection (Grind > graph > course schedule)
         EX) 1 -> 2 -> 3, 1 -> 3 is not cyclic if it is directed. but cyclic if
         it is undirected
         If it is connected graph, #edge == #node -1: acyclic else, cyclic
-    Directd:
-        DFS: utilize the process of finding path. Nodes in call stack
+    Directed:
+        DFS: utilize the process of finding path. Visit Nodes in call stack
             means they are in the same path. 
             -> DFS is naturally topological sort
-        BFS: utilize topological sort
+        BFS: utilize topological sort (If it has a cycle? cannot do Top Sort!)
             -> using a indegree. Put nodes with 0 indegree,
             pop and decrease the indegree of neighbors. 
             Repeat this process until queue is empty
+
+        ## We can use Tarjan's Algorithm!!
     
 
 Prim's, Kruskal's algo -> only for Undirected graph!
@@ -173,3 +200,105 @@ Binary Searching
     Key is finding sorted part. if some part is sorted,
     sorted[start] < sorted[end] we can know the key element is in that
     range just by compare the start and end of sorted part!
+
+Max sum of subArray!
+    Using a sliding window!
+
+Knapsack 
+    !!!Include VS not include!!! => think about Knapsack!
+    ## if we are picking any elements, then should use DP.
+    ## But, if we have to pick continuous elements(substring, subArray) => sliding window!
+    0 / 1 problem 
+    => set a 2D memo 
+    each row : each item, (meaning we are using from 0 ~ to i_th element)
+    each col : target amount or restriction.
+    We are making this amount OR it should be restricted to this amount
+
+Monotonic sequence EX) 239
+    Feels like Semi-sorted list 
+    When we don't need full sorted list, but we need to keep current Max
+    or current Min, We can use Monotonic Sequence! 
+    In this way, we can switch to next MAX or MIN when current MAX or MIN is 
+    expired
+
+Tree    
+    Undirected Graph that "For all nodes in G,
+    A -> B has !only! one path"
+    Diameter == Longest Path
+
+    How can I get a Maximum Path from A to B? -> O(N) possible
+    ## start traverse from a random point. Find the farthest point X.
+    ## start traverse from X and find the farthest point Y.
+    ## shortest path is X->Y
+    Since there is only one path from A -> B for all nodes in tree,
+    If we pick a random point, then the farthest node should be one of the
+    end of the longest path!
+    EX) let's say 1 - 2 - 3- 4- 5 is the lognest path. And, 3 - 6 - 7.
+    Even though we pick 6 or 7 which is the node not included in the longest path,
+    It should go through one node in the longest path. Thus, it will reach the end of
+    the longest path. We can prove this by contradiction(Suppose the Farthest point from X is
+    not the end of the longest path).
+    https://stackoverflow.com/questions/20010472/proof-of-correctness-algorithm-for-diameter-of-a-tree-in-graph-theory 
+    => application of this concept - Minimum height tree In tree
+
+    Due to this, # of Minimum height tree should be 1 or 2(mid point of the longest path)
+
+    Every node other than mid point should have the length bigger than L/2
+    (It goes through one of the node in the longest path and create the height > L/2)
+
+*** Topological Sort of Tree
+    traversing from leaf nodes and goes into center.
+    We can find the root of Min Height Tree (grind > binTree > 310) at last.
+    At the same time, we can get the length of diameter of tree!
+    (because we are reducing from the outer nodes, and the diameter is decreased by 2)
+    length of diameter = (total number of levels - 1) * 2 + 1 or 0, (if we are counting level from 1)
+
+    Get Diameter == longest path 
+    1) Do DFS/BFS twice. Pick random node, do DFS/BFS, find the farthest one(one end).
+        Then do DFS/BFS from that node. The farthest node from this search is the other end of path
+        => We can get exact path. (A->B-> ...)
+    2) Getting a Length of Diameter
+        A) Topological Sort 
+        B) recursively calculating height and tracking the max per each node.
+
+
+
+Graph 
+    Undirected 
+        Shortest : Dijkstra / Bellman Ford / Floyd Warshall
+        + Acyclic = Tree 
+            Shortest Path
+                - We can use Topologival Sort! (from a node to other nodes)
+                - simple shortest path 
+                    we can do something simillar to what we did at calculating max diameter.
+                    Use DFS, for each node, get min of children, Track 2 minimum children legnth..
+                    https://stackoverflow.com/questions/28460252/find-minimum-weight-of-simple-path-in-tree?rq=1 
+                    https://stackoverflow.com/questions/4977112/how-to-find-the-shortest-simple-path-in-a-tree-in-a-linear-time 
+            Longest Path == Diameter 
+                Run DFS/BFS twice 
+                Topological Sort
+
+    Directed
+        Short : Dijkstra (non-negative weight) (src node to all other nodes) - O(V^2)
+                Bellman Ford (negative, positive weight both works!) (src node to all other nodes) - O(VE)
+                Floyd Warshall (get shortest path for all pairs) (positive or negative both works) - O(V^3)
+        + Acyclic = DAG 
+            Shortest Path
+                - Topological Sort (from src node to other nodes)
+            Longest Path
+                - Topological Sort (negate weight and get shortest path) (from src node to other nodes)
+
+    Make MST
+        - Kruskal / Prim
+
+    Network Flow
+
+MONOTONIC SEQUENCE - grind > sliding window 239 and grind > stack > 84
+ * How to keep the potential max elements?
+ * What we need
+ *  (1) Max elements in sliding window
+ *  (2) Potential max elements which could be the max when current max is popped.
+ * We do not need a sorted list. we only need the way to keep potential max.
+ *  (A) We do not need previous elements smaller than current elements
+ *  (B) if current element is smaller than previous one, it might be the potential max
+ * ==> Monotonic Sequence
