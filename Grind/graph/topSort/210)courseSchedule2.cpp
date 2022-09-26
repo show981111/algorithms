@@ -69,3 +69,47 @@ public:
         return ans;
     }
 };
+
+/**
+ * @brief InDegree and DFS
+ * Use this when print all path of TopSort...
+ * We can apply BackTrack to this trick
+ */
+
+class Solution
+{
+public:
+    void dfs(vector<vector<int>> &graph, vector<int> &indegree, vector<bool> &visited, vector<int> &path)
+    {
+        for (int i = 0; i < visited.size(); i++)
+        {
+            if (visited[i] == false && indegree[i] == 0) // go as far as it can from this node.
+            {
+                visited[i] = true;
+                path.push_back(i);
+                for (int x : graph[i])
+                {
+                    indegree[x]--;
+                }
+                dfs(graph, indegree, visited, path);
+            }
+        }
+    }
+    bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+    {
+        vector<vector<int>> graph(numCourses);
+        vector<int> indegree(numCourses);
+
+        for (auto &pair : prerequisites)
+        {
+            graph[pair[1]].push_back(pair[0]);
+            indegree[pair[0]]++;
+        }
+        vector<bool> visited(numCourses, false);
+        vector<int> path;
+
+        dfs(graph, indegree, visited, path);
+
+        return path.size() == numCourses;
+    }
+};

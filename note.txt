@@ -19,12 +19,19 @@ DFS
         visited[src] = true;
         for(neighbor : neighbors[src]){
             if(!visited[neighbor] /* and other constraints*/){
+                /* DO not mark visited here!!*/
                 DFS(neighbor); //push unvisited node to call stack!
             }
         }
         // if we want to find all paths
         visited[src] = false
     }
+    Finding All Path Time Complexity : O(V+E)*O(V!)[max number of paths] = O(V!E) Print single path (O(V+E)) for all paths. 
+    procedure DFS(G, v) is
+        label v as discovered
+        for all directed edges from v to w that are in G.adjacentEdges(v) do
+            if vertex w is not labeled as discovered then
+                recursively call DFS(G, w)
 
 DFS & BFS 
     WHERE SHOULD WE CHECK VISITED?
@@ -302,3 +309,76 @@ MONOTONIC SEQUENCE - grind > sliding window 239 and grind > stack > 84
  *  (A) We do not need previous elements smaller than current elements
  *  (B) if current element is smaller than previous one, it might be the potential max
  * ==> Monotonic Sequence
+
+
+Dijkstra Sudo code (We do not need VISITED node.)
+    while Q is not empty:               // The main loop
+        u ← Q.extract_min()            // Remove and return best vertex
+        for each neighbor v of u:
+            alt = dist[u] + length(u, v) 
+            if alt < dist[v]            // if v is visited, dist[v] <= alt, so it should be false
+                dist[v] ← alt           // update distance here!
+                prev[v] ← u
+                Q.decrease_priority(v, alt) // we put the accumulated distance here!!!!
+                                            // to pop the shortest distance FROM THE SRC first! 
+                                            // if we put just the weight of the edge => Prim's algo
+
+Dijkstra - greedy , Bellman Ford - Dynamic => thus dijkstra cannot handle negative weight
+    Even though all edges have negative weight, Dijkstra fails because
+    it greedly choose the shortest edge from current, but the negative weight can
+    reduce this weight later => which makes greedy fail(substitute 5 to -1 and 2 to -2 from below)
+Dijkstra from A will first develop C, and will later fail to find A->B->C
+       A
+      / \
+     /   \
+    /     \
+   5       2
+  /         \
+  B--(-10)-->C
+
+V={A,B,C} ; E = {(A,C,2), (A,B,5), (B,C,-10)}
+
+Bellman Ford
+https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
+https://leetcode.com/problems/cheapest-flights-within-k-stops/discuss/340911/Understanding-Bellman-Ford 
+
+Shortest Path Faster Algorithm (Improvement of Bellman Ford)
+https://leetcode.com/problems/network-delay-time/discuss/810907/spfa-algorithm 
+    How? We use a BFS and update the distance
+   
+Bit Manipulation
+XOR characteristic
+    X ^ X = 0;
+    0 ^ X = X; 
+    A ^ B = B ^ A, commutative;
+AND 
+    X & 0 = 0;
+    X & 1 = last bit of X;
+Bit shift
+    A >> 1, right shift by one (divde by 2^1)
+
+Optimize Tips
+    Counting Sort. O(NlogN) -> O(N)
+    EX)letters, frequency
+
+Linked list
+    Usually think about "LENGTH" 
+    Thinking in terms of Length will help a lot.
+    Solve the problem in the case <where we already know the length>
+    of each list!! 
+    Get the solution, and just input the length to that solution.
+
+Post, Pre order 
+    If we include Null nodes, we can uniquely identify tree!
+    with post and preorder
+
+Find substring
+    If the letter is not unique, two pointers does not work!
+    EX) onionions & onions
+    KMP algo 
+    https://www.youtube.com/watch?v=4jY57Ehc14Y&ab_channel=LogicFirst 
+
+Priority Queue + BFS 
+    graph > 407, 778
+    Using Priority Queue to get minimum location,
+    and use BFS to how far we can go from that location.

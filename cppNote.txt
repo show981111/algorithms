@@ -113,3 +113,6 @@ Be careful with type conversion! (int, size_t ,double) => division and subtracti
     (double)(x + y) /2 => returns Double because double is divided(1.5)
     (double)((small.top() + big.top()) / 2) => returns double but incorrect (1) becaue int is divided,
     so the result is 1 then 1 is converted to double, so it returns 1. 
+
+Vector Equality (== operator)
+    if content is same? then true, else false
