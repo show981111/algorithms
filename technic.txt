@@ -1,0 +1,61 @@
+Getting the count from ranges.
+    EX) [0,9], [1,5] , [2,8] ...
+    From these ranges, get the array where how many 
+    0, 1, ... i are appeared in those ranges.
+
+    HINT: PREFIX
+    [x, y]
+    We can get count as a prefix sum.
+    Think [x,y] as add +1 from x and -1 from y + 1.
+    then, if we just calculate the prefix sum, then we can get the frequency.
+    https://www.youtube.com/watch?v=sb2FNlfxQpg&ab_channel=NateSantti
+    3:30
+
+SubArray sum = or <= or >= K 
+    https://leetcode.com/problems/minimum-size-subarray-sum/
+    https://www.geeksforgeeks.org/number-subarrays-sum-less-k/
+
+    Sliding Window With Two pointers?
+        -> If we use this, can we use catapilar method?
+        -> key point is how to uniquely identify subArrays? 
+        -> **For EACH right, should we start left from 0 or can we start left from the 
+            previous left?** => if we should start left = 0, then N^2, 
+            * @brief Sliding Window
+            * Just start from Exclusive! [L, R) 
+            * L = 0, R = 0; cur = INITIAL VALUE
+            * While(L < SIZE && R < SIZE){
+            *      if(something)
+            *          cur += nums[R++];
+            *      else
+            *          cur -= nums[L++];
+            *     ## Key point here is when R == nums.size()
+            *     ## Is there a potential answer cases? (since exclusive!)
+            *     Usual pattern is, for each 'R', count or loop every possible
+            *     answer cases by shrinking window. Then, go to next step(R++, enlarge window)
+            *     while(condition)
+            *         cur -= nums[L++];
+            * }
+    or HashMap
+        -> we store the information while we are running.
+        -> then we can just directly find what we need in O(1)!
+        -> the key point is, can we calculate what we need in O(1)?
+    Counting Range Sum -> GRIND/ Divide and Conquer 327
+Subsequence sum = or <= or >= K 
+    https://leetcode.com/discuss/interview-question/402487/Expedia-Coding-Test
+    KnapSack
+
+    ex) max even sum subsequence... 
+    Just max sum subsequence => all positive numbers
+    get max even sum is just subtract smallest odd from it!
+    Just add all positive numbers, and add 
+    https://www.geeksforgeeks.org/maximum-even-sum-subsequence/
+
+
+Max subsequence even sum
+    https://www.geeksforgeeks.org/maximum-even-sum-subsequence-of-length-k/#:~:text=Given%20an%20array%20arr%5B%5D,K%2C%20then%20print%20%2D1.&text=Explanation%3A%20Subsequence%20having%20maximum%20even,4%2C%206%2C%208%7D.
+
+
+KnapSack vs CoinChange(choose inf time)
+ * KNAPSACK : T(i,j) = T(i-1, j) || T(i-1, j - val[i]); [not use i vs use i]
+ * CoinChange : T(i,j) = T(i-1, j) || T(i, j - val[i]); [not use i vs use i but we can use it infinitely]
+ *              

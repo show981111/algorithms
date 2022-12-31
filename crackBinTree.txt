@@ -1,0 +1,9 @@
+Binary Tree with Recursion
+
+1. Find one or more base cases
+2. Call same function on Left Subtree
+3. Call same function on Right Subtree
+4. Join the result
+
+What should we return?
+What should we pass?

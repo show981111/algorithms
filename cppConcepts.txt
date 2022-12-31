@@ -5,3 +5,12 @@ They don't incease size of derived class too
 Vtable is a static member. All class instance has one virtual pointer
 that points to Vtable! No matter how many virtual functions do we have,
 only one virtual pointer! so just add 8byte to each class instance!
+
+Downcasting vs Upcasting
+- Downcast: Child(Big) <- Parent(Small) Not safe, because 
+            We do not have all information in parent class 
+            that child need. We should "explicitly" cast them.
+
+- Upcast: Parent(Small) <- child(Big) Legal cause we have all information in
+            Big class. Implicit cast fine!
+            EX) all male is a human, but not all human is male

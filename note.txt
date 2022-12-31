@@ -382,3 +382,14 @@ Priority Queue + BFS
     graph > 407, 778
     Using Priority Queue to get minimum location,
     and use BFS to how far we can go from that location.
+
+Subset and genComb, skip redundant  
+    just sort and skip the same elem!
+    genPerm.. -> use Map!
+
+Integer OutofBound without using long
+    USE "STRING" !!
+
+SubSequence with constraint... => KnapSack?!
+    https://leetcode.com/discuss/interview-question/402487/Expedia-Coding-Test
+    
