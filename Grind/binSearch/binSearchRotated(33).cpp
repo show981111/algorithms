@@ -119,3 +119,84 @@ public:
         return binSearch(nums, 0, nums.size() - 1, target);
     }
 };
+
+/*
+The Key of binary search on sorted array is,
+For Sorted part, see start and end, then exclude that part.
+Thus, we can just throw away half and go to another half.
+
+For this problem, key was,
+There must be two sorted part. L~mid is sorted or mid ~ R is sorted.
+and the challenge was how to select which half we should go.
+
+For this, we can use nums[0] because the starting element of one sorted array must be
+nums[0]!!
+
+*/
+class Solution
+{
+public:
+    int binSearch(vector<int> &nums, int start, int end, int target)
+    {
+        if (start > end)
+            return -1;
+        int mid = start + (end - start) / 2;
+        if (nums[mid] == target)
+            return mid;
+        else
+        {
+            if (nums[start] < nums[end]) // start ~ end is sorted
+            {
+                if (nums[mid] < target) // target is bigger
+                    return binSearch(nums, mid + 1, end, target);
+                else
+                    return binSearch(nums, start, mid - 1, target);
+            }
+            else
+            {                         // there is a bump in the middle
+                if (nums[0] > target) // target should be located after [min ~ end]
+                {
+                    if (nums[mid] < target) // [L, max, min, mid, target]
+                        return binSearch(nums, mid + 1, end, target);
+                    else
+                    { // [L, min, target, mid] or [L, mid, min, target]
+                        if (nums[0] <= nums[mid])
+                        { // 0 ~ mid sorted
+                            // [L, mid, min, target], mid is in 0 ~ MAX
+                            return binSearch(nums, mid + 1, end, target);
+                        }
+                        else
+                        {
+                            // [L, min, target, mid], mid is in min ~ end
+                            return binSearch(nums, start, mid - 1, target);
+                        }
+                    }
+                }
+                else
+                { // target should be located [L ~ max]
+                    // [L, mid,target ,max, min] or
+                    // [L, target ,max, mid, min]
+                    if (nums[mid] < target)
+                    {
+                        if (nums[0] <= nums[mid])
+                        { // 0 ~ mid sorted
+                            // mid is in 0 ~ MAX
+                            return binSearch(nums, mid + 1, end, target);
+                        }
+                        else
+                        {
+                            // mid is in min ~ end
+                            return binSearch(nums, start, mid - 1, target);
+                        }
+                    }
+                    else // [L, target, mid , max, min, end]
+                        return binSearch(nums, start, mid - 1, target);
+                }
+            }
+        }
+    }
+    int search(vector<int> &nums, int target)
+    {
+        return binSearch(nums, 0, nums.size() - 1, target);
+    }
+};

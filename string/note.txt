@@ -1,0 +1,6 @@
+String manipulation
+1) Create Buffer(create a result string) and write the answer there
+2) Use Separate index(two pointers) and Overwrite to the input! - in-place
+3) Use Erase or Insert Which takes O(N)... not good
+
+Sometimes, starting from the end will usually helpful!
