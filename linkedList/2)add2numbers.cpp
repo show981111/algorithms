@@ -7,38 +7,56 @@
  * D) reduce redundancy using extra variables! (l1Val, l2Val)
  *
  */
+
+/**
+ * @brief Recursive version
+ * Return value = what we want!
+ * pass information we need in the future call as a parameter!
+ */
 class Solution
 {
 public:
-    ListNode *add(ListNode *l1, ListNode *l2, int carry)
+    ListNode *add(ListNode *l1, ListNode *l2, int c)
     {
-        if (l1 == nullptr && l2 == nullptr && carry == 0)
-            return nullptr;
-
-        int l1Val = 0;
-        int l2Val = 0;
-
-        if (l1 != nullptr)
+        // want to return head.
+        ListNode *curHead;
+        int sum = c;
+        int d;
+        if (l1 && l2)
         {
-            l1Val = l1->val;
+            sum += l1->val + l2->val;
             l1 = l1->next;
-        }
-        if (l2 != nullptr)
-        {
-            l2Val = l2->val;
             l2 = l2->next;
         }
+        else if (l1)
+        {
+            sum += l1->val;
+            l1 = l1->next;
+        }
+        else if (l2)
+        {
+            sum += l2->val;
+            l2 = l2->next;
+        }
+        else
+        {
+            if (c > 0)
+            {
+                return new ListNode(c);
+            }
+            else
+                return nullptr;
+        }
 
-        unsigned int sum = l1Val + l2Val + carry;
-        unsigned int digit = sum % 10;
-        unsigned int newCarry = sum / 10;
-        ListNode *cur = new ListNode(digit);
-        cur->next = add(l1, l2, newCarry);
-        return cur;
+        d = sum % 10;
+        c = sum / 10;
+        curHead = new ListNode(d);
+        curHead->next = add(l1, l2, c);
+        return curHead;
     }
-
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
     {
+
         return add(l1, l2, 0);
     }
 };

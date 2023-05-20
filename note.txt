@@ -393,3 +393,6 @@ Integer OutofBound without using long
 SubSequence with constraint... => KnapSack?!
     https://leetcode.com/discuss/interview-question/402487/Expedia-Coding-Test
     
+Counting problems! 
+    Utilize Hashmap! 
+    Divisible? -> MOD! -> only need to think about numbers under MOD! 

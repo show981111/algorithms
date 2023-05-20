@@ -1,8 +1,15 @@
-#include <stack>
-using namespace std;
 /*
-Push : O(1) and Pop : O(n)
+THOUGHT FLOW:
+    STACK: only one place of popping and pusing
+    QUEUE: popping from the back, pushing to front (2 places)
+    -> need at least two stack
+    should pop the bottom element!
+
+TC:
+Push : O(1) and Pop : Worst O(n)
 */
+#include <stack>
+
 class MyQueue
 {
 public:
@@ -12,60 +19,102 @@ public:
 
     void push(int x)
     {
-        if (mainStack.empty())
-        {
-            front = x;
-        }
-        mainStack.push(x);
+        pushStack.push(x);
     }
 
     int pop()
     {
-        while (!mainStack.empty())
-        {
-            int curTop = mainStack.top();
-            mainStack.pop();
-            temp.push(curTop);
-        }
-        int oldTop = temp.top();
-        temp.pop();
-        if (temp.empty())
-            return oldTop;
-
-        front = temp.top();
-        while (!temp.empty())
-        {
-            int curTop = temp.top();
-            temp.pop();
-            mainStack.push(curTop);
-        }
-        return oldTop;
+        if (popStack.empty())
+            pushToPopStack();
+        int val = popStack.top();
+        popStack.pop();
+        return val;
     }
 
     int peek()
     {
-        return front;
+        if (popStack.empty())
+            pushToPopStack();
+        return popStack.top();
     }
 
     bool empty()
     {
-        if (mainStack.empty())
-            return true;
-        else
-            return false;
+        return popStack.empty() && pushStack.empty();
     }
 
 private:
-    int front;
-    stack<int> mainStack;
-    stack<int> temp; //contain top elem of mainStack. Use as a contaienr when pop                       //elem
+    stack<int> popStack;  // [ 4 3 2 8 7 6 5
+    stack<int> pushStack; // [
+
+    void pushToPopStack()
+    {
+        while (!pushStack.empty())
+        {
+            popStack.push(pushStack.top());
+            pushStack.pop();
+        }
+    }
 };
 
-/**
- * Your MyQueue object will be instantiated and called as such:
- * MyQueue* obj = new MyQueue();
- * obj->push(x);
- * int param_2 = obj->pop();
- * int param_3 = obj->peek();
- * bool param_4 = obj->empty();
- */
+/*
+Tracking the Bottom Elem ->
+push/pop/peek: Amortized O(1)
+Each elem is moved to popStack only once!
+*/
+#include <stack>
+
+class MyQueue
+{
+public:
+    MyQueue()
+    {
+    }
+
+    void push(int x)
+    {
+        if (pushStack.empty())
+            bottomOfPushStack = x;
+        pushStack.push(x);
+    }
+
+    int pop()
+    {
+        if (popStack.empty())
+            pushToPopStack();
+        int val = popStack.top();
+        popStack.pop();
+        return val;
+    }
+
+    int peek()
+    {
+        if (popStack.empty())
+            return bottomOfPushStack;
+        else
+            return popStack.top();
+    }
+
+    bool empty()
+    {
+        return popStack.empty() && pushStack.empty();
+    }
+
+private:
+    // STACK: only one place of popping and pusing
+    // QUEUE: popping from the back, pushing to front (2 places)
+    // -> need at least two stack
+    // should pop the bottom element!
+    stack<int> popStack; // [ 4 3 2 8 7 6 5
+    stack<int> pushStack;
+    int bottomOfPushStack;
+
+    void pushToPopStack()
+    {
+        while (!pushStack.empty())
+        {
+            popStack.push(pushStack.top());
+            pushStack.pop();
+        }
+    }
+};

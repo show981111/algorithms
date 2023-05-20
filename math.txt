@@ -1,0 +1,5 @@
+MOD CALCULATION
+ex) map > 2183
+- (a*b)%k==0 <=> (gcd(a,k) * gcd(b,k)) % k is also 0
+    : ab = kx, 
+- (ab) mod K == (a mod K) * (b mod K)

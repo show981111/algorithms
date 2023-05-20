@@ -36,6 +36,27 @@ public:
             }
         }
     }
+
+    void rotate(vector<vector<int>> &matrix)
+    {
+        int N = matrix.size();
+        for (int layer = 0; layer < N / 2; layer++)
+        {
+            // define the invariant.
+            int edgeLength = N - 2 * layer;   // length of edge we will go over at each time
+            int start = layer;                // we are going from here
+            int end = layer + edgeLength - 1; // to the end
+            // gonna traverse elements within the edge length range
+            for (int index = 0; index < edgeLength - 1; index++)
+            {
+                int topLeft = matrix[start][start + index];                // top left starting from (start,start) -> (start,end)
+                matrix[start][start + index] = matrix[end - index][start]; // bottomLeft starting from (end,start) -> (start,start)
+                matrix[end - index][start] = matrix[end][end - index];     // bottomRight: (end,end) -> (end, start)
+                matrix[end][end - index] = matrix[start + index][end];     // topRight: (start,end) -> (end,end)
+                matrix[start + index][end] = topLeft;
+            }
+        }
+    }
 };
 /**
  * @brief eflection is same as reflection about line y = x and flip...
