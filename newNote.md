@@ -17,9 +17,25 @@ After Intersection, all nodes are the same! -> Length of the list is at least [I
 
 ## Tree
 
--   Depth: from Root -> cur node's depth = parentDepth + 1
+-   Depth: from Root -> `cur node's depth = parentDepth + 1`
 
--   Height: from bottom(leaf) -> cur node's height = max(leftHeight, rightHeight) + 1
+-   Height: from bottom(leaf) -> `cur node's height = max(leftHeight, rightHeight) + 1`
+
+### Tree Traversal
+
+-   Pre-order(unqiue for tree)
+-   Post-order(unqiue for tree)
+-   In-order(not unique)
+
+### BST
+
+-   **_ALL NODES_** in left subtree <= cur->val < **_ALL NODES_** in right subtree!
+    This inequality is true for **_ALL NODES_**
+    Thus, cur node should be the max for left subtree, min for right subtree for **_ALL NODES_**
+-   Specifically, Left Subtree **_RIGHTMOST_** val < cur value < Right Subtree **_LEFTMOST_** val
+-   In order traversal gives us an ordered list!
+
+### MIN/MAX Heap
 
 ## Graph Traversal
 
@@ -100,6 +116,13 @@ In general, pattern B takes more time and memory because it allows redundant pus
         }
     ```
 
+### Bidirectional Search
+
+-   Finding the **_Distance_** between node A and B.
+    If we use traditional BFS from A, it will be O(K^d) (Suppose each node has K neighbors and A~B is d)
+    If we use bidirectional, then start from A and B at the same time -> early collision. -> O(K^(d/2))
+    HUGE DIFFERENCE!
+
 ## LinkedList
 
 -   Utilize Fast & Slow Pointer
@@ -115,6 +138,16 @@ In general, pattern B takes more time and memory because it allows redundant pus
 -   Priority Queue : YES dups, Insert/Delete -> O(logn) (For adjusting HEAP)
 -   Ordered Set/map : NO dups, Insert/Delete -> O(logn) (Internally using balanced Tree)
 
+## Topological Sort
+
+When should we use this? : When we want to find the **_ORDERING_**, usually when we have the restriction in how to deploy some items, and want to know the **_Sequence under that restriction_**!
+ex) Graph > 210
+
+-   DFS
+    Naturally topSort because we visit nodes sequentially. We need to push those nodes to stack after we visited all neighbors (push nodes after it reaches the end and come back). To detect cycle, we need to check if we visit the nodes on the path(trace) again => use Trace array or different mark for visited arr
+-   BFS
+    Using an Indegree. Put nodes with 0 indegrees to the queue, delete them and update indegree, and repeat!
+
 ## ETC
 
 A.Floyd's cycle detection algorithm (Two pointers)
@@ -125,14 +158,3 @@ A.Floyd's cycle detection algorithm (Two pointers)
 -   After they meet, send one pointer to the starting point.
 -   Proceed each pointer one step at a time. Then they will meet at the entrypoint of cycle!!
     (ref) https://www.youtube.com/watch?v=PvrxZaH_eZ4&ab_channel=Insidecode
-
-````
-
-```
-
-```
-
-```
-
-```
-````
