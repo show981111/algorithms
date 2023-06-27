@@ -3,3 +3,8 @@ reverse(s.begin(), s.end()) => reverse from s.begin() to s.end();
 nth_element(nums.begin(), nums.begin() + k - 1, nums.end(), greater<int>());
     1,3) Linear in std::distance(first, last) on average.
     => getting Kth largest element(1-indexed)
+
+next_permutation(iterator, iterator) -> boolean (in-place)
+    https://en.cppreference.com/w/cpp/algorithm/next_permutation
+    True if next permutation is possible
+    false if permutation reaches end and it went back to first permutation

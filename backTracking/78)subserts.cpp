@@ -30,25 +30,24 @@ public:
 };
 
 /**
- * @brief Other(slight application of combination)
- * subsets == getting all combinations(nCk, k = 0 ~ n)
- * So if we should push back cur, when cur.size() == 0,1,2,3,...,n
- * This means we can just remove the if statement!
+ * @brief Recursive Call
+ * SubSet[~i] = Subset[~i-1] U {Subset[~i-1] + nums[i]} (without, and with current elem from
+ *                                                          previous subsets)
  */
+
 class Solution
 {
 public:
-    void backTrack(vector<int> &nums, vector<vector<int>> &res, vector<int> &cur, int curIndex)
+    void subset(vector<vector<int>> &res, vector<int> &nums, vector<int> &cur, int index)
     {
-        // if(cur.size() == 2){ if we uncomment this part, it becomes genComb!
-        res.push_back(cur); // wihtout cur element!
-        //     return;
-        // }
+        // cur is subset[~i-1] (subset from previous call is stored in cur)
+        res.push_back(cur);
 
-        for (int i = curIndex; i < nums.size(); i++)
+        for (int i = index; i < nums.size(); i++)
         {
-            cur.push_back(nums[i]);
-            backTrack(nums, res, cur, i + 1);
+            cur.push_back(nums[i]);        // subset[~i-1] U nums[i]
+            subset(res, nums, cur, i + 1); // pass i+1 to prevent redundant elem
+                                           // since we chose elem till i, go to i+1
             cur.pop_back();
         }
     }
@@ -56,7 +55,9 @@ public:
     {
         vector<vector<int>> res;
         vector<int> cur;
-        backTrack(nums, res, cur, 0);
+        // Subset[~i] = {subset[~i-1] + nums[i]} U subset[~i-1]
+
+        subset(res, nums, cur, 0);
         return res;
     }
 };

@@ -77,7 +77,7 @@ CPP vector erase() and clear()
     Time complexity is O(N)!!
     pop_back() is O(1)
 
-lower_bound(begin, end, val , [comparator for "<"])
+lower_bound(begin, end, val , [comparator for "<"]) ** SHOULD BE AN INCREASING ORDER(use Rbegin for reverse order)
     - comp(elem, val) = false 인 첫번째 아이템 (elem >= val 인 첫 아이템)
         (elem < val)
     ex) low = lower_bound (v.begin(), v.end(), 20, 
@@ -116,3 +116,6 @@ Be careful with type conversion! (int, size_t ,double) => division and subtracti
 
 Vector Equality (== operator)
     if content is same? then true, else false
+
+iter_swap(fiter, siter);
+    swap two item. same as swap(arr[i], arr[j])

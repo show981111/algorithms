@@ -128,6 +128,7 @@ In general, pattern B takes more time and memory because it allows redundant pus
 -   Utilize Fast & Slow Pointer
 -   Problem of Removing HEAD or TAIL -> **TEMPORARY(DUMMY)** head or tail!
 -   Usually, knowing the **LENGTH** helps a lot!
+-   Most problems: finding mid, reverse order(stack or in-place), weaving!
 
 ## Stack & Queue
 
@@ -137,6 +138,19 @@ In general, pattern B takes more time and memory because it allows redundant pus
 
 -   Priority Queue : YES dups, Insert/Delete -> O(logn) (For adjusting HEAP)
 -   Ordered Set/map : NO dups, Insert/Delete -> O(logn) (Internally using balanced Tree)
+
+## Dynamic Programming (Memoization)
+
+-   Overlapping subproblems -> caching those results!
+-   Come up with Recursive formula! ex) T(n) = T(n-1) + T(n-2)
+-   Suppose we have the answer for T(n), what should we do to get T(n+1)? **_Induction_**
+
+## Divide & Conquer
+
+-   Non-overlapping subproblems!
+-   1. Divide
+    2. recursive call to each divided data
+    3. Merge them
 
 ## Topological Sort
 
