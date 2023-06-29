@@ -162,6 +162,23 @@ ex) Graph > 210
 -   BFS
     Using an Indegree. Put nodes with 0 indegrees to the queue, delete them and update indegree, and repeat!
 
+## Backtracking
+
+-   대부분의 노가다 케이스는 DFS 로 가능하다...
+    노가다 = 모든 경우의수 그래프 = DFS
+    노가다를 뛰는데 **제약조건** 이 중요하다.
+    제약조건 아래에 노가다 => Backtracking but with conditions inside to only create cases
+    that satisfies certaion condition!
+
+-   backtrack/22.genParan 의 경우, 제약조건, ) 는 무조건 ( 다음에 온다! 개수가 매칭되야한다!
+    EX) generate 3 paran
+    '(' -> '()' -> '()('
+    ....-> '((' => '(()' ...
+    ............=> '((('
+    Basically DFS!
+    **Create children using FOR loop** (iterate through!)
+    At the end, if we reach the leaf node condition, insert them to result!
+
 ## ETC
 
 A.Floyd's cycle detection algorithm (Two pointers)

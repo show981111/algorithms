@@ -22,7 +22,7 @@ public:
         unordered_set<int> st;
         for (int i = curIndex; i < path.size(); i++)
         {
-            if (st.find(path[i]) != st.end())
+            if (st.find(path[i]) != st.end()) // not swapping the same pair again! (path[curIndex] & path[i])
                 continue;
             st.insert(path[i]);
             swap(path[curIndex], path[i]);
@@ -49,7 +49,18 @@ public:
  * Thus, we should use a map to avoid this redundancy!
  *
  */
+/*
+    This enforces that one element goes to that position only once!
+    For example,
+    1(A),1(B),2,3
+    [_ 1 _ _] Same numbers can only go to that position once!
+    since map forces to choose 1 -> 2 -> 3 (not 1 -> 1 -> 2 -> 3)
 
+    Skip thing does not work. We should pick some element at a time
+    but skip prevent that element from being picked.
+    ex) 0,0,1,1,9 -> you pick first 0. Then second 0 is always skipped
+    because nums[i-1] == nums[i] condition.
+*/
 class Solution
 {
 public:
