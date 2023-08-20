@@ -21,6 +21,7 @@
  *          swap(3,3) (A[2] + T(N - A[:2]))-> swap(4,4) -> swap(5,5) => push 1,2,3,4,5
  *                                            swap(4,5)([5 fixed] + T(1,2,3,4)) -> swap(4,4) => push 1,2,3,5,4
  *          swap(3,4) ([4 fixed] + T(1,2,3,5)) but after curindex is fixed, so its like T(3,5) ...
+ *
  */
 
 class Solution
@@ -87,5 +88,104 @@ public:
         vector<bool> used(nums.size(), false);
         genPerm(nums, res, path, used);
         return res;
+    }
+};
+
+/**
+ * @brief Easiest way of thinking
+ * From T(n-1), who can we make T(N)?
+ * build from base
+ *
+ * T(1) = {1}
+ * T(2) = {1,2}, {2,1}
+ * T(3) = {3,1,2}, {1,3,2}, {1,2,3} // {3,2,1}, {2,3,1}, {2,1,3}
+ * So for every possible position from T(N-1), we insert nums[n]!
+ *
+ */
+
+class Solution
+{
+public:
+    vector<vector<int>> genPerm(vector<int> &nums, int curIndex)
+    {
+        vector<vector<int>> res;
+        if (curIndex == 0)
+        {
+            res.push_back({nums[0]});
+            return res;
+        }
+        int num = nums[curIndex];
+        vector<vector<int>> prevPerms = genPerm(nums, curIndex - 1);
+        for (auto &perm : prevPerms)
+        {
+            for (int i = 0; i < perm.size(); i++)
+            {
+                vector<int> temp = perm;
+                temp.insert(temp.begin() + i, num);
+                res.push_back(temp);
+            }
+            perm.push_back(num);
+            // For all possible position, insert num!
+            res.push_back(perm);
+        }
+
+        return res;
+    }
+    vector<vector<int>> permute(vector<int> &nums)
+    {
+        return genPerm(nums, nums.size() - 1);
+    }
+};
+
+/**
+ * @brief Build from all perms of length N-1
+ * P(SET) = all permutations of SET
+ * ex)
+ * P({1}) = {1},
+ *
+ * P({1,2}) = ({1} + P{2}) + ({2} + P{1}) = {1,2}, {2,1}
+ * P({1,3}) = ({1} + P{3}) + ({3} + P{1}) = {1,3}, {3,1}
+ * P({2,3}) = ({2} + P{3}) + ({3} + P{2}) = {2,3}, {3,2}
+ *
+ * P{1,2,3} = ({1} + P{2,3})(SWAP{1,1}) + ({2} + P{1,3})(SWAP{1,2}) + ({3} + P{1,2})(SWAP{1,3})
+ *
+ * SWAP{1,1} => {1} + P{2,3}
+ * SWAP{1,2} => {1,2,3} => {2,1,3}, then PERM({1,3}) so {2} + PERM{1,3}
+ * SWAP{1,3} => {3,2,1} => then perm({2,1}) so {3} + PERM{2,1}
+ *
+ * Build permutation without i_th elem, and add that item back!
+ */
+
+class Solution
+{
+public:
+    vector<vector<int>> genPerm(vector<int> &nums)
+    {
+        vector<vector<int>> res;
+        if (nums.size() == 0)
+        {
+            res.push_back({});
+            return res;
+        }
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            int item = nums[i];
+            nums.erase(nums.begin() + i);             // delete that num
+            vector<vector<int>> prev = genPerm(nums); // create perm without it!
+            nums.insert(nums.begin() + i, item);      // then add that num back!
+
+            for (auto &perm : prev)
+            {
+                perm.push_back(item);
+                res.push_back(move(perm));
+            }
+        }
+
+        return res;
+    }
+    vector<vector<int>> permute(vector<int> &nums)
+    {
+        return genPerm(nums);
     }
 };

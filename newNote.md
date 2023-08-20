@@ -144,6 +144,57 @@ In general, pattern B takes more time and memory because it allows redundant pus
 -   Overlapping subproblems -> caching those results!
 -   Come up with Recursive formula! ex) T(n) = T(n-1) + T(n-2)
 -   Suppose we have the answer for T(n), what should we do to get T(n+1)? **_Induction_**
+-   Important Note: When summing up the previous cases.. think if it is overlapped(redundant)
+    It is crucial to come up with non-overlapping, unique scenarios and sum them up!
+    ex) when u count T(n) = T(n-1) + T(n-2), if T(n-1) includes T(n-2) cases, then redundant count happen!
+
+### KnapSack Pattern (1/0 problem)
+
+-   How do I know if it is knapsack?
+
+    -   Use it or not use it -> Combination of given item to make target == **_SUBSET PROBLEM_** or **_COMBINATION_**
+    -   When we have a target amount, and we have an item to reach that target.
+    -   Sometimes we have constraints too(ex maximum weights)
+    -   Want to make a **_target value_** with the **_Subset_**
+
+-   Typical pattern is,
+
+    -   x-axis is the amount we want to make 0 ~ K
+    -   y-axis is the index of items we want to use, ex) we want to use 0 ~ i_th item
+    -   Then, #ways = when using current item + when only using ~i-1 items
+
+-   Do we have infinite amount per each item? or only one?
+
+    -   IF we have only one per each item, if we use current item, we should only use 0 ~ i-1_th item
+        -   So, T(N, i) = T(N - value[i], i-1) + T(N, i-1) = using current + only using 0 ~ i-1_th
+    -   IF we have infinite per each item, even though we used current item, we can still use current item(0 ~ i_th item).
+        -   So, T(N, i) = T(N - value[i], i) + T(N, i-1)
+
+### LIS Pattern (Subsequence == Subset with ordering)
+
+-   Also subset problem, but with ordering
+-   ## Typical pattern is, get the desired value when we **include i_th element**
+    -   So, we get T_i(N) = max(T_i(0:N-1)) where T_i(N) is the maximum lenght of subsequence that ends with i and **includes i**
+-   Now, from that array, we choose max!
+-   The reason behind this is, we cannot get all possible cases for subsequence(subset), so we calculate the case where we assume that we include i_th element. Then, we iterate all options to get N+1_th
+
+### LCS Pattern
+
+-   we have two strings.. so probably 2D array?
+-   T(i,j) is the longest common subsequence of a[:i] and b[:j]
+
+## DP & BackTracking
+
+-   DP and backtracking is all about **_"노가다를 어떻게 뛰냐?"_**
+-   Building a **_경우의수 Tree_** helps a lot. -> Each level could be an index we pass to back tracking ex) curIndex
+-   **_How_** to divide big problem with smaller problem?
+    -   Think about how to divide the cases.
+        ex) Knapsack - With I_th item / Without I_th item
+        LIS - sequence that ends with 0th, 1st, 2nd ... Nth item.
+        Permutation - starting with a_1, a_2, ... , a_n
+        coinChange - make 100 with 0,1,2,3,4 quarters...
+    -   this cases will be looped inside of **_For loop_** in Backtrack.
+    -   and jumping the level will be dealt with **_curIndex_**
 
 ## Divide & Conquer
 
@@ -178,6 +229,69 @@ ex) Graph > 210
     Basically DFS!
     **Create children using FOR loop** (iterate through!)
     At the end, if we reach the leaf node condition, insert them to result!
+
+-   Branch & Bound
+    경우의 수 트리에서, 어떻게 하면 Branch 를 줄일 수 있을까?
+    Find **invariant!!** => if we violate that invariant, that branch is not promising!
+    So, finding the condition that we can for sure eliminate that cases is important!
+    ex) backTracking/51
+    For N-queens, we know that for each row, there must be one queen => one queen per row.
+    Thus, we dont have to iterate 2 for loop for row & col, we can just iterate one loop for col.
+
+-   Permutation(Order matters) vs Combination(Order doesnt matter)
+    For permutation, we can choose anything from the first item.
+    For combination, we cannot choose from the first item because it will cause duplicate count.
+    ex) [1,3,2] == [2,3,1]. So we have to choose from prevIndex + 1, to avoid duplicate
+
+## Sliding Window + Two Pointers (subarray, substring)
+
+-   Usually, start && end pointer. Proceed end once at a time, and shrink the window by
+    pushing start as far as we can. Then, proceed end, repeat. (catapillar method)
+-   **_3 Things in mind_**
+    1. Condition to keep the window size ex) subArray sum < X
+    2. When should we shrink ex) subArray sum >= X
+    3. How to get what we want from start,end indices. ex) result += start, += end - start + 1
+    4. If I use catapillar method, once I push right and shrink left, do I need to move left back
+       when I start a new phase with current right?
+-   For counting, key is, how can we count something **without Dup and without iterating again**
+    -   Without Dup: How many of them when it ends at "end"? -> each case becomes unique that ends at "end" idx. ex) [1,2,3,4], arr that ends at 2 vs 3 vs 4 all unique, no redundant
+    -   Am I counting all? : Important thing is, after I move forward "start" for current "end", and I move "end" forward, is it okay to start "start" from the previous start? Would it impact counting of next End? => This is why we need a little heck to avoid re-iterating
+    -   Without Iterating - Need some heck.
+        EX) end - start + 1 (length == #subarray that contains item at "end")
+        ex)[... {1,2,3} ...] -> {3}, {3,2}, {3,2,1}
+        or += start(after shrink) [1,2,3, ... N ...] -> {1~N}, {2~N}, {3 ~ N}
+    -   **_Exatcly K = At most K - At most K-1_**
+    -   Translating Problems to **_At Most K or Exactly K_** simplifies the problem!
+-   Pattern
+
+```
+while(end < N){
+    do something; end++; (usually increase count or something)
+    // For this end,
+
+    // SHRINK WINDOW - push start as far as we can
+    while(condition met && start < end){
+        do something; start++
+    }
+
+    get result for this "end"
+    ex) get length == count subarray that contains "end" == end - start + 1
+}
+```
+
+## BIT MANIPULATION
+
+### XOR
+
+-   XOR rules
+    X ^ X = 0; X ^ 0 = X
+    Commutative / Associative
+    A ^ B = B ^ A
+    A ^ (B ^ C) = (A ^ B) ^ C
+
+    Using this,
+    if we have [1,4,3,2,0], missing number is 5.
+    So, (1^4^3^2^0)^(0^1^2^3^4^5) = (0^0)^(1^1)^(2^2)^(3^3)^(4^4)^(5) = 0^0^0^0^0^5 = 5
 
 ## ETC
 

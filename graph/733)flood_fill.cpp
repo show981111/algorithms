@@ -84,3 +84,37 @@ public:
         return image;
     }
 };
+
+/**
+ * @brief DFS
+ *
+ */
+
+class Solution
+{
+public:
+    int dir[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    void dfs(vector<vector<int>> &image, int sr, int sc, int from, int newColor)
+    {
+        if (sr < 0 || sr >= image.size() || sc < 0 || sc >= image[0].size() || image[sr][sc] != from)
+            return;
+
+        image[sr][sc] = newColor;
+        for (int i = 0; i < 4; i++)
+        {
+            int nr = sr + dir[i][0];
+            int nc = sc + dir[i][1];
+
+            dfs(image, nr, nc, from, newColor);
+        }
+    }
+    vector<vector<int>> floodFill(vector<vector<int>> &image, int sr, int sc, int newColor)
+    {
+        int from = image[sr][sc];
+        if (from == newColor)
+            return image;
+
+        dfs(image, sr, sc, from, newColor);
+        return image;
+    }
+};
