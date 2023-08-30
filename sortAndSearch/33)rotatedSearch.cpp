@@ -2,11 +2,14 @@
 Key of bin search. -> should we go left or right?
 Check Invariant. Target CANNOT be here..
 (1) Find which part is sorted! if a[x] < a[y], x~y is sorted
-(2) Compare with Pivot
-Important notion is "Pivot"
-In rotated array, nums[left] can be a pivot! because, [min] ~ nums[right] are
-smaller than nums[left] ex) [4,5,6,7,0,1,2], 0 ~ 2 are smaller than 4
-Also, all item after nums[left] to max are sorted!
+(2) If one part is sorted, the other part should not! 
+
+Think carefully of boundary ex) nums[left] == target cuz we should decide which one to use between <= or <
+*/
+/**
+Key of bin search. -> should we go left or right?
+Check Invariant. Target CANNOT be here..
+
 
 Think carefully of boundary ex) nums[left] == target cuz we should decide which one to use between <= or <
 */
@@ -18,54 +21,43 @@ public:
     {
         if (left > right)
             return -1;
-        int direction = 1; // go right
+
         int mid = left + (right - left) / 2;
         if (nums[mid] == target)
+        {
             return mid;
-        if (nums[left] < nums[right])
-        { // left ~ right sorted -> normal binsearch
-            if (nums[mid] < target)
-                direction = 1;
-            else
-                direction = -1;
         }
-        else
-        { // nums[left] > nums[right]
-            // mid could be, [Up][Mid][Min][Up]
-            if (nums[left] <= nums[mid]) // left ~ mid sorted. if left == mid, still sorted!
+        if (nums[left] <= nums[mid]) // left ~ mid is sorted, if left == mid, then left is sorted!
+        {
+            if (target >= nums[left] && target <= nums[mid])
             {
-                if (target < nums[left])
-                    direction = 1;
-                else
-                {
-                    if (target > nums[mid])
-                        direction = 1;
-                    else
-                        direction = -1;
-                }
+                // Go to left if the sorted part has target
+                return binSearch(nums, left, mid - 1, target);
             }
             else
-            { // nums[left] >= mid [Up][Min]mid[Up] -> mid ~ right sorted
-                if (target >= nums[left])
-                    direction = -1; // if target == left should go left!
-                else
-                {
-                    if (target > nums[mid])
-                        direction = 1;
-                    else
-                        direction = -1;
-                }
+            {
+                // if it is not in sorted part, should be in the other side
+                return binSearch(nums, mid + 1, right, target);
             }
         }
-
-        if (direction == 1)
+        if (nums[mid] <= nums[right]) // mid to right is sorted
         {
-            return binSearch(nums, mid + 1, right, target);
+            if (target >= nums[mid] && target <= nums[right])
+            {
+                // Go to right if the sorted part has target
+                return binSearch(nums, mid + 1, right, target);
+            }
+            else
+            {
+                // if it is not in sorted part, should be in the other side
+                return binSearch(nums, left, mid - 1, target);
+            }
         }
-        else
-        {
-            return binSearch(nums, left, mid - 1, target);
-        }
+        return -1; // cannot have an array that both parts are not sorted. Rotated array
+        // is composed of Two sorted part, (rotated sorted) + (original sorted) so
+        // it should have at least one sorted part!
+        // Also, proof bt contradiction : if both are not sorted, must habe a two peak,
+        // which doesn't make sense.
     }
 
     int search(vector<int> &nums, int target)
@@ -73,7 +65,6 @@ public:
         return binSearch(nums, 0, nums.size() - 1, target);
     }
 };
-
 /**
  * @brief Binary Search
  * The key is identify sorted part.

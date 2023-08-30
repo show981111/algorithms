@@ -1,6 +1,15 @@
 /**
  * @brief Bit manipul
+ * XOR rules
+ * X ^ X = 0
+ * X ^ 0 = X
+ * Commutative / Associative
+ * A ^ B = B ^ A
+ * A ^ (B ^ C) = (A ^ B) ^ C
  *
+ * Using this,
+ * if we have [1,4,3,2,0], missing number is 5.
+ * So, (1^4^3^2^0)^(0^1^2^3^4^5) = (0^0)^(1^1)^(2^2)^(3^3)^(4^4)^(5) = 0^0^0^0^0^5 = 5
  */
 
 class Solution

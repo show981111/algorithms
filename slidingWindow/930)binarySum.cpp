@@ -1,10 +1,14 @@
+/**
+ * @brief
+ *
+ */
 class Solution
 {
 public:
     int numSubarraysWithSum(vector<int> &nums, int goal)
     {
         // if num[end] == 0; add T(N-1) + current cnt (goal could be 0!)
-        // if num[end] == 1; add it to curSum, , if curSUm == goal, shrink right, add cnt
+        // if num[end] == 1; add it to curSum, if curSUm == goal, shrink right, add cnt
         // No impact if I start from shrunken right. Why? if we move "right" back, then
         // it will include 1 that we passed while shrinking, and it will exceed the goal.
         // So, no way we can make a subarray with previous elems of "right"

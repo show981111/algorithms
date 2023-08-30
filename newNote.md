@@ -249,7 +249,7 @@ ex) Graph > 210
     pushing start as far as we can. Then, proceed end, repeat. (catapillar method)
 -   **_3 Things in mind_**
     1. Condition to keep the window size ex) subArray sum < X
-    2. When should we shrink ex) subArray sum >= X
+    2. When should we shrink and when should we stop? (break while) ex) subArray sum >= X
     3. How to get what we want from start,end indices. ex) result += start, += end - start + 1
     4. If I use catapillar method, once I push right and shrink left, do I need to move left back
        when I start a new phase with current right?
@@ -292,6 +292,13 @@ while(end < N){
     Using this,
     if we have [1,4,3,2,0], missing number is 5.
     So, (1^4^3^2^0)^(0^1^2^3^4^5) = (0^0)^(1^1)^(2^2)^(3^3)^(4^4)^(5) = 0^0^0^0^0^5 = 5
+
+## Monotonic Queue (Using Deque)
+
+-   Monotonic Queue
+    -> (O(nlogn) -> O(n) just throw away bigger ones as we iterate!)
+    Use it when we know that we can throw smaller values as we proceed!
+    How to make it ?
 
 ## ETC
 
