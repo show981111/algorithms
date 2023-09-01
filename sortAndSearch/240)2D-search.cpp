@@ -43,6 +43,47 @@ public:
     }
 };
 
+/**
+ * @brief Divde 2D grid with 4 boxes!
+ *
+ */
+class Solution
+{
+public:
+    bool boxSearch(vector<vector<int>> &matrix, int target, int startRow, int endRow, int startCol, int endCol)
+    {
+        // cout << startRow << " " << endRow << " " << startCol << " " << endCol << endl;
+        if (startRow > endRow || startCol > endCol)
+            return false;
+        int midRow = startRow + (endRow - startRow) / 2;
+        int midCol = startCol + (endCol - startCol) / 2;
+        // cout << "MID " << midRow << " " << midCol << endl;
+        if (matrix[midRow][midCol] == target)
+            return true;
+        if (matrix[midRow][midCol] < target)
+        {
+            return boxSearch(matrix, target, midRow + 1, endRow, midCol + 1, endCol) ||
+                   boxSearch(matrix, target, startRow, midRow, midCol + 1, endCol) ||
+                   boxSearch(matrix, target, midRow + 1, endRow, startCol, midCol);
+        }
+        else
+        {
+            // cout << "mid is bigger \n";
+            return boxSearch(matrix, target, startRow, midRow - 1, startCol, midCol - 1) ||
+                   boxSearch(matrix, target, startRow, midRow - 1, midCol, endCol) ||
+                   boxSearch(matrix, target, midRow, endRow, startCol, midCol - 1);
+        }
+    }
+    bool searchMatrix(vector<vector<int>> &matrix, int target)
+    {
+        return boxSearch(matrix, target, 0, matrix.size() - 1, 0, matrix[0].size() - 1);
+    }
+};
+
+/**
+ * @brief O(mlogn) Bin search per row!
+ *
+ */
 class Solution
 {
 public:

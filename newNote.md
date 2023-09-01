@@ -43,6 +43,9 @@ After Intersection, all nodes are the same! -> Length of the list is at least [I
 
 WHERE SHOULD WE CHECK VISITED?
 FOR BFS it does matter because nodes at same level could push the same node twice!
+
+Thus, **_mark visited when you push to the queue_** to prevent inserting the
+same node twice and do the logic twice!
 ex) A, B is in same level, C is neighbor of both A,B. then C is inserted twice.
 
 -   PATTERN A) make it visited when we add nodes to the queue
@@ -56,7 +59,7 @@ ex) A, B is in same level, C is neighbor of both A,B. then C is inserted twice.
                 q.pop();
                 for(neighbor : neighbors[src]){
                     if(!visited[neighbor] /* and other constraints*/){
-                        visited[neighbor] = true;
+                        visited[neighbor] = true; --> IMPORTANT!
                         q.push(neighbor);
                     }
                 }
@@ -147,6 +150,7 @@ In general, pattern B takes more time and memory because it allows redundant pus
 -   Important Note: When summing up the previous cases.. think if it is overlapped(redundant)
     It is crucial to come up with non-overlapping, unique scenarios and sum them up!
     ex) when u count T(n) = T(n-1) + T(n-2), if T(n-1) includes T(n-2) cases, then redundant count happen!
+-   **_Optimization_**, like getting a minimum of maximum => It might be DP!!
 
 ### KnapSack Pattern (1/0 problem)
 
