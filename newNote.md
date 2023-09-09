@@ -15,11 +15,13 @@ After Intersection, all nodes are the same! -> Length of the list is at least [I
 -   Utilize Hashmap!
 -   Divisible? -> MOD! -> only need to think about numbers under MOD!
 
-## Tree
+## Tree == Undirected, Connected, Acyclic Graph
 
 -   Depth: from Root -> `cur node's depth = parentDepth + 1`
 
 -   Height: from bottom(leaf) -> `cur node's height = max(leftHeight, rightHeight) + 1`
+
+-   **_Longest Path in Tree = Diameter_**
 
 ### Tree Traversal
 

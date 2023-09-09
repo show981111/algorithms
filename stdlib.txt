@@ -8,3 +8,6 @@ next_permutation(iterator, iterator) -> boolean (in-place)
     https://en.cppreference.com/w/cpp/algorithm/next_permutation
     True if next permutation is possible
     false if permutation reaches end and it went back to first permutation
+
+Unordered_map: .erase(key or iterator)
+list: .erase(iterator), .remove(key): note that it erases all nodes with key
