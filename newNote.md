@@ -306,6 +306,11 @@ while(end < N){
     Use it when we know that we can throw smaller values as we proceed!
     How to make it ?
 
+## Greedy -> Another Optimization Problem
+
+- Key of greedy. Prove if it is **optimal**!
+**_Making a best choice for myself -> leads to the optimal decision for everyeone!_**
+
 ## ETC
 
 A.Floyd's cycle detection algorithm (Two pointers)
