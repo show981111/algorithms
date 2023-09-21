@@ -1,10 +1,12 @@
 CXX ?= g++
-CXXFLAGS ?= -Wall -Werror -pedantic -g --std=c++17 -fsanitize=address -fsanitize=undefined
+CXXFLAGS ?= -Werror -pedantic -g --std=c++17 -fsanitize=address -fsanitize=undefined
 
 # Run a regression test
 test: play.exe 
 	./play.exe < input.in
 
+custom: play.exe 
+	./play.exe < test_input.txt
 # Compile the main executable
 play.exe: play.cpp
 	$(CXX) $(CXXFLAGS) play.cpp -o play.exe

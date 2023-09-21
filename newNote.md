@@ -128,6 +128,10 @@ In general, pattern B takes more time and memory because it allows redundant pus
     If we use bidirectional, then start from A and B at the same time -> early collision. -> O(K^(d/2))
     HUGE DIFFERENCE!
 
+### Finding Cycle
+
+- find a node whose neighbor (other than the previous node in the current path) has already been visited.
+
 ## LinkedList
 
 -   Utilize Fast & Slow Pointer

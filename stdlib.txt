@@ -15,3 +15,7 @@ list: .erase(iterator), .remove(key): note that it erases all nodes with key
 Priority_queue: Default max heap. It pop's from the back of the vector. So sorting in reverse order!
     - Min heap: priority_queue<int, vector<int>, greater<int>> pq;
     - Max heap: priority_queue<int, vector<int>, less<int>> pq;
+
+lower_bound: If all elems are bigger than target, it will return first Index.
+            ex) [5,6,7,8], target = 3 -> will return 0 == lower_bound() - begin()
+            So, the returned iterator's value may be bigger than the target!

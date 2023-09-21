@@ -52,3 +52,46 @@ public:
         return res;
     }
 };
+
+/*
+ * Simplified. Just do twice!
+ */
+class Solution
+{
+public:
+    int binSearch(vector<int> &nums, const int offset, int start, int end, int target)
+    {
+        if (start > end)
+            return -1;
+        // cout << start << " " << end << endl;
+        int mid = start + (end - start) / 2;
+        if (nums[mid] == target && ((mid == 0 && offset < 0) || (mid == nums.size() - 1 && offset > 0) || nums[mid + offset] != target))
+        {
+            return mid;
+        }
+        else if (nums[mid] == target && nums[mid + offset] == target)
+        {
+            if (offset > 0)
+            {
+                return binSearch(nums, offset, mid + 1, end, target);
+            }
+            else
+                return binSearch(nums, offset, start, mid - 1, target);
+        }
+        else if (nums[mid] < target)
+        {
+            return binSearch(nums, offset, mid + 1, end, target);
+        }
+        else
+        {
+            return binSearch(nums, offset, start, mid - 1, target);
+        }
+    }
+    vector<int> searchRange(vector<int> &nums, int target)
+    {
+        int start = binSearch(nums, -1, 0, nums.size() - 1, target);
+        int end = binSearch(nums, 1, 0, nums.size() - 1, target);
+        vector<int> ans = {start, end};
+        return ans;
+    }
+};
