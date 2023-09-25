@@ -315,6 +315,17 @@ while(end < N){
 - Key of greedy. Prove if it is **optimal**!
 **_Making a best choice for myself -> leads to the optimal decision for everyeone!_**
 
+- Typical pattern.
+    1) Greedy stays Ahead : at i_th choice, greedy is better than any other choices!
+    2) Exchange : Suppose there is an optimal solution O which is different from Greedy solution, we can
+                tweak O to get a better solution!
+
+- Greedy cannot backTrack -> Each Choise should be optimal!
+    Suppose there is an optimal solution O that is different from S (Greedy solution).
+    Then, we can tweak O and create O' that is better than O' !
+    Proof pattern is, Let O = {O_1, O_2 , ... , O_n} where O_i represents i_th choice.
+    and if we replace O_i with S_i, then we can get better solution!
+
 ## ETC
 
 A.Floyd's cycle detection algorithm (Two pointers)

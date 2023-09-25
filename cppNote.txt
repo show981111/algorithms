@@ -78,7 +78,7 @@ CPP vector erase() and clear()
     pop_back() is O(1)
 
 lower_bound(begin, end, val , [comparator for "<"]) ** SHOULD BE AN INCREASING ORDER(use Rbegin for reverse order)
-    - comp(elem, val) = false 인 첫번째 아이템 (elem >= val 인 첫 아이템)
+    - comp(elem, val) = false 인 첫번째 아이템 **(elem >= val 인 첫 아이템)**
         (elem < val)
     ex) low = lower_bound (v.begin(), v.end(), 20, 
             [](const int& elem, const int& val){
