@@ -39,33 +39,33 @@ using namespace std;
 
 int main()
 {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-  int n;
-  cin >> n;
-  vector<int> coins(n);
-  for (int i = 0; i < n; i++)
-  {
-    cin >> coins[i];
-  }
-
-  sort(coins.begin(), coins.end());
-  unsigned long maxSum = 0; // maxSum we can make!
-
-  for (int i = 0; i < coins.size(); i++)
-  {
-    if (maxSum + 1 < coins[i]) // cant build maxSum + 1 at all!
+    int n;
+    cin >> n;
+    vector<int> coins(n);
+    for (int i = 0; i < n; i++)
     {
-      cout << maxSum + 1;
-      return 0;
+        cin >> coins[i];
     }
-    else
-    {
-      maxSum += coins[i];
-    }
-  }
-  cout << maxSum + 1;
 
-  return 0;
+    sort(coins.begin(), coins.end());
+    unsigned long maxSum = 0; // maxSum we can make!
+
+    for (int i = 0; i < coins.size(); i++)
+    {
+        if (maxSum + 1 < coins[i]) // cant build maxSum + 1 at all!
+        {
+            cout << maxSum + 1;
+            return 0;
+        }
+        else
+        {
+            maxSum += coins[i];
+        }
+    }
+    cout << maxSum + 1;
+
+    return 0;
 }

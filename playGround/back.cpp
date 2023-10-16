@@ -1,78 +1,119 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <map>
-#include <set>
+#include <queue>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+
 using namespace std;
 
-bool check(map<int, set<int>> &rooks,
-           vector<bool> &rowcheck,
-           vector<bool> &colCheck, int r1, int c1, int r2, int c2)
-{
-    auto rowFrom = rooks.lower_bound(r1);
-    auto rowTo = rooks.upper_bound(r2);
+/**
+ * Restriction & Max result from all Subsets => KNAPSACK
+ *
+ *
+ * T(i , p): Maximum number of pages we can get from choosing 0 ~ i_th books and with cost "p"
+ * T(i , p) = max(T(i - 1, p - price[i]) + page[i], T(i, p - 1), T(i-1, p)) [Buy current one, or not buy]
+ *                   Buy current                     Dont buy current and get most
+ * Base case T(0,0) = T(0, price[0] <= p) = page[0]
+ *
+ */
 
-    for (auto iter = rowFrom; iter != rowTo; ++iter)
+const int MOD = 1e9 + 7;
+
+void backTrack(vector<int> &nums, int curIndex, int m, int lowerBound, int upperBound, unsigned long &cnt)
+{
+    // cout << curIndex << " " << lowerBound << " " << upperBound << endl;
+    if (curIndex >= nums.size())
     {
-        cout << "ROW " << iter->first << endl;
-        auto fromCol = iter->second.lower_bound(c1);
-        auto toCol = iter->second.upper_bound(c2);
-        for (auto colIter = fromCol; colIter != toCol; ++colIter)
-        {
-            if (rowcheck[iter->first] || colCheck[*colIter])
-            {
-                return true;
-            }
-        }
+        cnt = (cnt + 1) % MOD;
+        return;
     }
-    return false;
+    if (nums[curIndex] != 0 && curIndex > 0 && abs(nums[curIndex - 1] - nums[curIndex]) <= 1)
+    {
+        cnt = (cnt + 1) % MOD;
+        return;
+    }
+    else if (nums[curIndex] != 0)
+    {
+        return;
+    }
+
+    vector<int> possibleVals;
+    for (int i = lowerBound; i <= upperBound; i++)
+    {
+        possibleVals.push_back(i);
+    }
+
+    for (int i = 0; i < possibleVals.size(); i++)
+    {
+        nums[curIndex] = possibleVals[i];
+        int lb = max(1, possibleVals[i] - 1);
+        int ub = min(possibleVals[i] + 1, m);
+        backTrack(nums, curIndex + 1, m, lb, ub, cnt);
+        nums[curIndex] = 0;
+    }
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    int n, q;
-    cin >> n >> q;
 
-    map<int, set<int>> rooks; // row -> cols
-    vector<bool> rowcheck(n + 1, false);
-    vector<bool> colCheck(n + 1, false);
+    int n, m;
 
-    for (int i = 0; i < q; i++)
+    cin >> n >> m;
+
+    vector<int> nums(n);
+    for (int i = 0; i < n; i++)
     {
-        int t;
-        cin >> t;
-        if (t == 1)
+        cin >> nums[i];
+    }
+
+    unsigned long ans = 0;
+
+    for (int i = 0; i < n;)
+    {
+        int zeroInd = -1;
+        while (i < n && nums[i] == 0)
         {
-            int r, c;
-            cin >> r >> c;
-            rowcheck[r] = true;
-            colCheck[c] = true;
-            rooks[r].insert(c);
+            if (zeroInd == -1)
+                zeroInd = i;
+            i++;
         }
-        else if (t == 2)
+
+        if (zeroInd == -1)
+            i++;
+        else
         {
-            int r, c;
-            cin >> r >> c;
-            rowcheck[r] = false;
-            colCheck[c] = false;
-            rooks[r].erase(c);
-            if (rooks[r].size() == 0)
+            int lb = 1;
+            int ub = m;
+
+            if (i < n)
             {
-                rooks.erase(r);
+                lb = max(1, nums[i] - (i - zeroInd));
+                ub = min(ub, nums[i] + (i - zeroInd));
+            }
+            if (zeroInd - 1 >= 0)
+            {
+                lb = max(lb, nums[zeroInd - 1] - 1);
+                ub = min(ub, nums[zeroInd - 1] + 1);
+            }
+            unsigned long cnt = 0;
+            backTrack(nums, zeroInd, m, lb, ub, cnt);
+            // cout << lb << " " << ub << " " << cnt << endl;
+            // cout << cnt << " ";
+
+            if (ans == 0)
+                ans = (ans + cnt) % MOD;
+            else
+            {
+                ans = (ans * cnt) % MOD;
             }
         }
-        else if (t == 3)
-        {
-            int r1, c1, r2, c2;
-            cin >> r1 >> c1 >> r2 >> c2;
-            bool res = check(rooks, rowcheck, colCheck, r1, c1, r2, c2);
-            if (res)
-                cout << "YES\n";
-            else
-                cout << "NO\n";
-        }
     }
+
+    cout << ans;
 
     return 0;
 }
