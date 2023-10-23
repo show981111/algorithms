@@ -3,69 +3,86 @@
 #include <algorithm>
 #include <queue>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <unordered_set>
 #include <limits>
 #include <cassert>
 using namespace std;
 
 /**
- * https://cses.fi/problemset/task/2183/
+ * https://cses.fi/problemset/task/1672
  *
- * Minimum sum we cannot make from numbers!
- * We can only use numbers once. So.. maybe knapsack?
- * Knapsack = O(Max sum * n)
- *  -> T(i,j) : using 0~i_th coins, can we make sum j? -> YES/NO
- *     T(i,j) = T(i-1, j) V T(i-1, j - value[i])
- * However, seems unnecessary because we dont really need to know all numbers that can be made.
- * We just need a first number that cannot be made.
  *
- * * * * * * * * * * * * * * *
- * How about starting from the small number, accumulating sum we can make?
+ * Floyd–Warshall algorithm
+ * Shortest distance from all nodes to all other noces. (O(N^3))
  *
- * Suppose using 0 ~ (i-1)_th values, we can build a sum 0 ~ K.
- * At i_th coin, we have two choices: Take it or not.
- * If we don't take, sums we can build is just 0 ~ K.
- * If we take, sums we can build is: MIN: 0 + Value[i] (only take this coin) MAX: K + Value[i] (Current maximum buildable sum + current coin)
+ * Initialize distance matrix, and use the fact that dist(x,y) = dist(x,c) + dist(c,y)
  *
- * The key note is, we can build all values between MIN(value[i]) ~ MAX(k+value[i]) because we know that we can build 0 ~ k using previous coins,
- * we can just add current coin to each 0 , 1, 2, 3, 4, ~ K, to build 0 + Value[i], 1 + Value[i], 2 + Value[i], ... , K + Value[i].
- *
- * Now, we can check that, if 0 + Value[i] > K + 1, then we cannot build K+1 at all!
- * Since coins after I_th coin, all coins are bigger than Value[i], which means K + 1 <  0 + Value[i] <= Value[i+1], Value[i+2] ,,,
- * Thus, no way to build K + 1.
- *
+ * For all possible "c", we update the distance of all possible pairs of nodes (x,y)
+ * So it is like DP.
  */
+struct Edge
+{
+  int src;
+  int dest;
+  int weight;
+};
 
 int main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
+  const long NegInf = -1e13;
 
-  int n;
-  cin >> n;
-  vector<int> coins(n);
+  int n, m;
+  cin >> n >> m;
+  vector<long> distance(n + 1, NegInf);
+  vector<bool> reachableFromN_reverse(n + 1, false);
+  vector<Edge> edges;
+  reachableFromN_reverse[n] = true;
+  for (int i = 0; i < m; i++)
+  {
+    int a, b, x;
+    cin >> a >> b >> x;
+    edges.push_back(Edge{a, b, x});
+    if (a == 1)
+    {
+      distance[b] = x;
+    }
+    if (b == n)
+    {
+      reachableFromN_reverse[a] = true;
+    }
+  }
+  distance[1] = 0;
+
+  bool cycle = false;
   for (int i = 0; i < n; i++)
   {
-    cin >> coins[i];
+    cycle = false;
+    for (Edge &e : edges)
+    {
+      if (reachableFromN_reverse[e.dest])
+      {
+        // cout << e.dest << " is reachable " << e.src << " is also reachable\n";
+        reachableFromN_reverse[e.src] = true;
+      }
+      if (distance[e.src] != NegInf && distance[e.src] + e.weight > distance[e.dest])
+      {
+        // cout << e.src << " is reachable, " << e.dest << " also \n";
+        distance[e.dest] = distance[e.src] + e.weight;
+        if (reachableFromN_reverse[e.dest] || reachableFromN_reverse[e.src])
+        {
+          cycle = true;
+        }
+      }
+    }
   }
 
-  sort(coins.begin(), coins.end());
-  unsigned long maxSum = 0; // maxSum we can make!
-
-  for (int i = 0; i < coins.size(); i++)
-  {
-    if (maxSum + 1 < coins[i]) // cant build maxSum + 1 at all!
-    {
-      cout << maxSum + 1;
-      return 0;
-    }
-    else
-    {
-      maxSum += coins[i];
-    }
-  }
-  cout << maxSum + 1;
+  if (cycle)
+    cout << -1;
+  else
+    cout << distance[n];
 
   return 0;
 }

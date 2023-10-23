@@ -363,6 +363,16 @@ A.Floyd's cycle detection algorithm (Two pointers)
 - Proceed each pointer one step at a time. Then they will meet at the entrypoint of cycle!!
     (ref) <https://www.youtube.com/watch?v=PvrxZaH_eZ4&ab_channel=Insidecode>
 
+### Bellman Ford: Shortest/Longest path for DAG
+
+    Bellman ford is a DP algorithm where **T(target, i) = The shortest path from the source to target using i number of edges**.
+    Unless there is a negative weight cycle, we can find the shortest path. If there is a negative cycle, the shortest path can be -INF anyways.
+    Similarly, we can find the longest path unless there is a positive cycle.
+
+    For edge = (x,target)
+    T(target, i) = min(T(x,i-1) + weight) => Shortest distance to x using i-1 edges + current edge's weight which can take us to "target."
+    ex) Graph > Bellman Ford > CSES.
+
 ## How to make O(N) searching to O(logN)?
 
 1. Divid By Two : Binary Search or Divide & Conquer -> Can't use this case. Can't do random access.
