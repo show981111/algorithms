@@ -2,87 +2,99 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-#include <string>
-#include <map>
-#include <unordered_set>
-#include <limits>
-#include <cassert>
+#include <unordered_map>
+
 using namespace std;
 
 /**
- * https://cses.fi/problemset/task/1672
+ * SINGLE SOURCE "K" SHORTEST PATH (including cycle)
  *
+ * Top K routes from 1 -> N
  *
- * Floyd–Warshall algorithm
- * Shortest distance from all nodes to all other noces. (O(N^3))
+ * Not DAG!! Unique Route INCLUDING cycle!
+ * A route can visit the same city several times. => Can use the same edge multiple times
  *
- * Initialize distance matrix, and use the fact that dist(x,y) = dist(x,c) + dist(c,y)
+ * Should aim to get top K route. If we want to get all route, -> will lead to inf loop since there could be a cycle!
  *
- * For all possible "c", we update the distance of all possible pairs of nodes (x,y)
- * So it is like DP.
+ * 1) DFS? -> Since graph has a cycle backTrack will go infinite
+ * 2) Bellman Ford? -> How to tell the redundant paths? Also path with cycle.. how?
  */
+
 struct Edge
 {
-  int src;
-  int dest;
-  int weight;
+  int to;
+  int cost;
+};
+
+struct Route
+{
+  int to;
+  unsigned long cost;
 };
 
 int main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
-  const long NegInf = -1e13;
+  const unsigned long MAX_COST = 3e14;
 
-  int n, m;
-  cin >> n >> m;
-  vector<long> distance(n + 1, NegInf);
-  vector<bool> reachableFromN_reverse(n + 1, false);
-  vector<Edge> edges;
-  reachableFromN_reverse[n] = true;
+  int n, m, k;
+  cin >> n >> m >> k;
+
+  vector<vector<Edge>> graph(n + 1);
+  vector<priority_queue<unsigned long>> topKdists(n + 1); // Store smallest K routes, MAX HEAP
+  topKdists[1].push(0);
+
   for (int i = 0; i < m; i++)
   {
-    int a, b, x;
-    cin >> a >> b >> x;
-    edges.push_back(Edge{a, b, x});
-    if (a == 1)
-    {
-      distance[b] = x;
-    }
-    if (b == n)
-    {
-      reachableFromN_reverse[a] = true;
-    }
+    int a, b, c;
+    cin >> a >> b >> c;
+    graph[a].push_back({b, c});
   }
-  distance[1] = 0;
 
-  bool cycle = false;
-  for (int i = 0; i < n; i++)
+  auto comp = [](const Route &a, const Route &b)
+  { return a.cost > b.cost; };
+  priority_queue<Route, vector<Route>, decltype(comp)> pq(comp); // min Heap
+  pq.push({1, 0});
+
+  while (!pq.empty())
   {
-    cycle = false;
-    for (Edge &e : edges)
+    Route r = pq.top();
+    pq.pop();
+
+    // cout << r.cost << " ";
+
+    if (r.cost > topKdists[r.to].top()) // can't break into top k distance
     {
-      if (reachableFromN_reverse[e.dest])
+      continue;
+    }
+    // continue;
+    for (Edge &e : graph[r.to]) // (1 + E/V)
+    {
+      unsigned long newDist = r.cost + e.cost; // new distance from 1 -> r.to -> e.to
+
+      if (topKdists[e.to].size() < k || topKdists[e.to].top() > newDist) // better than the worst case
       {
-        // cout << e.dest << " is reachable " << e.src << " is also reachable\n";
-        reachableFromN_reverse[e.src] = true;
-      }
-      if (distance[e.src] != NegInf && distance[e.src] + e.weight > distance[e.dest])
-      {
-        // cout << e.src << " is reachable, " << e.dest << " also \n";
-        distance[e.dest] = distance[e.src] + e.weight;
-        if (reachableFromN_reverse[e.dest] || reachableFromN_reverse[e.src])
+        topKdists[e.to].push(newDist); // KlogK
+        if (topKdists[e.to].size() > k)
         {
-          cycle = true;
+          topKdists[e.to].pop();
         }
+        pq.push({e.to, newDist});
       }
     }
   }
-
-  if (cycle)
-    cout << -1;
-  else
-    cout << distance[n];
+  vector<unsigned long> v;
+  while (!topKdists[n].empty()) // O(KlogK)
+  {
+    v.push_back(topKdists[n].top());
+    // cout << topKdists[n].top() << " ";
+    topKdists[n].pop();
+  }
+  for (auto iter = v.rbegin(); iter != v.rend(); ++iter)
+  {
+    cout << *iter << " ";
+  }
 
   return 0;
 }

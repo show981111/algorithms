@@ -84,7 +84,6 @@ void getMaxLength(int cur, int par, vector<vector<int>> &tree, vector<Record> &t
     }
     temp.push_back(maxFromParent);
     temp.push_back(toLeaf[cur].first);
-    temp.push_back(toLeaf[cur].second);
     sort(temp.begin(), temp.end(), [](const Dist &a, const Dist &b)
          { return a.length > b.length; });
     maxLength[cur].first = temp[0];

@@ -25,7 +25,7 @@ using namespace std;
  *      bosses[cur][j] 2^j th boss of cur = bosses[bosses[cur][j-1]][j-1] Why? 2^j - 2^j-1 = 2^j-1(2 - 1) = 2^( j - 1)
  *
  * Some Bit Manipulation
- * (1) LSB: X & -X
+ * (1) LSB(Left most one): X & -X
  * (2) POWER of Two? : n % (n - 1) == 0
  */
 

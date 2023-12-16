@@ -156,6 +156,23 @@ In general, pattern B takes more time and memory because it allows redundant pus
 
 - find a node whose neighbor (other than the previous node in the current path) has already been visited.
 
+#### Directed Graph
+
+- DFS: Visited array + current_path array. current_path[i] = node i is in current stack.
+        If we visited a node that is already in the path(stack), that means we have a cycle.
+        We still can use visited array to skip visited node because as soon as we step into any nodes in the cycle,
+        We will get a cycle. If we confirmed that we visited that node, but no cycle was detected, we can just skip exploring that node.
+        <https://cp-algorithms.com/graph/finding-cycle.html>
+- Bellman Ford: If N_th iteration still reduces the distance -> There is an edge.
+        Key point: Bellman ford tells us there is a node that is **"Reachable"** by negative cycle
+        -> So we need a **parent array** and backTrack at most N times to get the actual element of cycle.
+        From that point, we can just backTrack to get all elements of the cycle (Since it is a cycle, parent array will keep circling)
+        EX) CSES > Finding_cycle
+
+#### Undirected graph
+
+- Check if #edges == #vertex - 1
+
 ## LinkedList
 
 - Utilize Fast & Slow Pointer
@@ -236,8 +253,8 @@ In general, pattern B takes more time and memory because it allows redundant pus
 
 - Non-overlapping subproblems!
 - 1. Divide
-    2. recursive call to each divided data
-    3. Merge them
+  2. recursive call to each divided data
+  3. Merge them
 
 ## Topological Sort
 
@@ -373,8 +390,36 @@ A.Floyd's cycle detection algorithm (Two pointers)
     T(target, i) = min(T(x,i-1) + weight) => Shortest distance to x using i-1 edges + current edge's weight which can take us to "target."
     ex) Graph > Bellman Ford > CSES.
 
+    ```Python
+    For cnt in Total number of edgs:
+        For edge in Edges:
+            T(edge.to, cnt) = min(T(edge.to, cnt), T(edge.from, cnt -1) + edge.weight)
+                                                    # Using current edge to update the distance
+    ```
+
+### SPFA (BFS version of Bellmand Ford)
+
+```Cpp
+  While(!q.empty())
+    node v = q.front(); q.pop();
+    for(neighbor : graph[v]) // find v's neighbor
+        NewDist = dp[v] + v->neighbor weight // going throguh v to get to neighbor
+        if(NewDist < dp[neighbor])
+            dp[neighbor] = NewDist;
+            If neighbor not in q: // If neighbor is already in Queue, u can just update the distances when you pop that node.
+                                // Since we are grabbing the distance information from dp so it doesn't matter
+                q.push({neighbor});
+```
+
 ## How to make O(N) searching to O(logN)?
 
 1. Divid By Two : Binary Search or Divide & Conquer -> Can't use this case. Can't do random access.
 2. Power Of Two : Make a quick access pointer(shortcut) at each power of two points
      ex) Binary Lifting(Record shortcut pointer to every 2^k), Segment Tree, Sparse Tables
+
+## Monotonic Stack/Deque
+
+    In the stream,
+        (1) If we get bigger value, all previous smaller values are useless (Decresing stack)
+        (2) If we get a smaller value, all previous bigger values are uesless (Increasing stack)
+    EX) Citadel-tagged/42,85,221,239

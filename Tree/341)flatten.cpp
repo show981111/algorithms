@@ -98,3 +98,83 @@ public:
         return false;
     }
 };
+
+/**
+ * hasNext() doesn't change the result even tho it is applied multiple times.
+ */
+
+class NestedIterator
+{
+public:
+    typedef vector<NestedInteger>::iterator NestIterator;
+    struct Range
+    {
+        NestIterator cur;
+        NestIterator end;
+        // Since we don't have an access to original array, cant tell if it is an end.
+    };
+    vector<Range> iters;
+    int cur; // If there is a get current operation, we can just return this.
+    NestedIterator(vector<NestedInteger> &nestedList)
+    {
+        iters.push_back({nestedList.begin(), nestedList.end()});
+    }
+
+    int next()
+    {
+        getInt();
+        cur = iters.back().cur->getInteger();
+        forwardIter();
+        return cur;
+    }
+
+    bool hasNext()
+    {
+        return getInt();
+    }
+
+    // Get the integer of current iters state.
+    // Return true if we can get an integer, false if not
+    bool getInt()
+    {
+        while (!iters.empty())
+        {
+            if (iters.back().cur == iters.back().end)
+            {
+                iters.pop_back();
+                if (!iters.empty())
+                    iters.back().cur++;
+            }
+            else
+            {
+                if (iters.back().cur->isInteger())
+                    return true;
+                auto &l = iters.back().cur->getList();
+                iters.push_back({l.begin(), l.end()});
+            }
+        }
+        if (!iters.empty())
+            return true;
+        return false;
+    }
+
+    // Forward iters state.
+    void forwardIter()
+    {
+        getInt();
+        while (!iters.empty())
+        {
+            iters.back().cur++;
+            while (!iters.empty() && iters.back().cur == iters.back().end)
+            {
+                iters.pop_back();
+                if (!iters.empty())
+                    iters.back().cur++;
+            }
+            if (!iters.empty())
+                getInt();
+            // cout << "FOrwarded. Current Int is at " <<
+            return;
+        }
+    }
+};

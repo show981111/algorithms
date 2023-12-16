@@ -68,3 +68,51 @@ public:
         return inOrder(root, prev);
     }
 };
+
+/**
+ * O(NlogN) method
+ */
+
+class Solution
+{
+public:
+    TreeNode *minElem(TreeNode *root)
+    {
+        if (root == nullptr)
+            return root;
+        if (root->left == nullptr)
+            return root;
+        else
+            return minElem(root->left);
+    }
+    TreeNode *maxElem(TreeNode *root)
+    {
+        if (root == nullptr)
+            return root;
+        if (root->right == nullptr)
+            return root;
+        else
+            return maxElem(root->right);
+    }
+    // O(NlogN)
+    bool isValidBST(TreeNode *root)
+    {
+        if (root == nullptr)
+            return true;
+        bool res = isValidBST(root->left);
+        if (!res)
+            return res;
+        res = isValidBST(root->right);
+        if (!res)
+            return res;
+
+        TreeNode *maxLeft = maxElem(root->left);
+        TreeNode *minRight = minElem(root->right);
+
+        if (maxLeft != nullptr && maxLeft->val >= root->val)
+            return false;
+        if (minRight != nullptr && root->val >= minRight->val)
+            return false;
+        return true;
+    }
+};

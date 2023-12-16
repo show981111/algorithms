@@ -13,6 +13,9 @@ using namespace std;
  *
  * Using visited to check which node I have visited during this path,
  * and make it to false after dfs like BACKTRACKING!
+ * ==> NO NEED FOR BACKTRACK! We keep visited vs current path visited separately
+ *      If we already visited that node and that node is not in the current path?
+ *          -> It is confirmed that that node is not making a cycle. -> CAN SKIP!
  *
  * visited_group(Connected Components) is the visited to check which node I have visited.
  * All nodes that I can visit from a single node using DFS are all connected and
@@ -33,6 +36,8 @@ bool dfs(vector<vector<int>> &graph, int cur, int end, vector<int> &curPath, vec
             curPath.push_back(neighbor);
             return true;
         }
+        if (visited_group[neighbor]) // if we already visited and confirmed there is no cycle, can skip
+            continue;
         visited_group[neighbor] = true;
         visited[neighbor] = true;
         curPath.push_back(neighbor);

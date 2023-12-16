@@ -72,3 +72,30 @@ upper_bound(begin, end, val , [](const T& val, const T& elem){return val < elem;
     Getting the last element such that a < b => use Upper bound, and decrement the index!!
 - Upper_bound gets the first element such that val < elem
 - lower_bound gets the first element such that val <= elem
+
+### Split string
+
+``` Cpp
+    std::stringstream test("this_is_a_test_string");
+    std::string segment;
+    std::vector<std::string> seglist;
+
+    while(std::getline(test, segment, '_'))
+    {
+    seglist.push_back(segment);
+    }
+```
+
+    + >> operation only reads that bytes skipping whitespace.
+    For example, 
+
+``` Cpp
+    istringstream in(" 3 + 4 / 5 * 4");
+    int n;
+    char op;
+    while(in >> n){ // read first 3, then 4, 5 ,... 
+        in >> op;  // read next operation ex 3 skipping white space
+    }
+```
+
+    cin reads until it fills its size or until skipping whitespaces

@@ -2,118 +2,64 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-#include <string>
 #include <unordered_map>
-#include <unordered_set>
 
 using namespace std;
 
 /**
- * Restriction & Max result from all Subsets => KNAPSACK
+ * Top K routes from 1 -> N
  *
- *
- * T(i , p): Maximum number of pages we can get from choosing 0 ~ i_th books and with cost "p"
- * T(i , p) = max(T(i - 1, p - price[i]) + page[i], T(i, p - 1), T(i-1, p)) [Buy current one, or not buy]
- *                   Buy current                     Dont buy current and get most
- * Base case T(0,0) = T(0, price[0] <= p) = page[0]
- *
+ * 1) DFS brute force O(V^V) due to backtrack
+ * 2) Bellman Ford?
  */
 
-const int MOD = 1e9 + 7;
-
-void backTrack(vector<int> &nums, int curIndex, int m, int lowerBound, int upperBound, unsigned long &cnt)
+struct Edge
 {
-    // cout << curIndex << " " << lowerBound << " " << upperBound << endl;
-    if (curIndex >= nums.size())
-    {
-        cnt = (cnt + 1) % MOD;
-        return;
-    }
-    if (nums[curIndex] != 0 && curIndex > 0 && abs(nums[curIndex - 1] - nums[curIndex]) <= 1)
-    {
-        cnt = (cnt + 1) % MOD;
-        return;
-    }
-    else if (nums[curIndex] != 0)
-    {
-        return;
-    }
-
-    vector<int> possibleVals;
-    for (int i = lowerBound; i <= upperBound; i++)
-    {
-        possibleVals.push_back(i);
-    }
-
-    for (int i = 0; i < possibleVals.size(); i++)
-    {
-        nums[curIndex] = possibleVals[i];
-        int lb = max(1, possibleVals[i] - 1);
-        int ub = min(possibleVals[i] + 1, m);
-        backTrack(nums, curIndex + 1, m, lb, ub, cnt);
-        nums[curIndex] = 0;
-    }
-}
+    int from;
+    int to;
+    int cost;
+};
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    const unsigned long MAX_COST = 3e14;
 
-    int n, m;
+    int n, m, k;
+    cin >> n >> m >> k;
 
-    cin >> n >> m;
-
-    vector<int> nums(n);
-    for (int i = 0; i < n; i++)
+    vector<Edge> edges;
+    vector<unsigned long> dists(n + 1, MAX_COST);
+    dists[1] = 0;
+    vector<unsigned long> costToTarget;
+    for (int i = 0; i < m; i++)
     {
-        cin >> nums[i];
+        int a, b, c;
+        cin >> a >> b >> c;
+        edges.push_back({a, b, c});
     }
 
-    unsigned long ans = 0;
-
-    for (int i = 0; i < n;)
+    for (int i = 0; i < n - 1; i++)
     {
-        int zeroInd = -1;
-        while (i < n && nums[i] == 0)
+        for (Edge &e : edges)
         {
-            if (zeroInd == -1)
-                zeroInd = i;
-            i++;
-        }
-
-        if (zeroInd == -1)
-            i++;
-        else
-        {
-            int lb = 1;
-            int ub = m;
-
-            if (i < n)
+            if (dists[e.from] != MAX_COST)
             {
-                lb = max(1, nums[i] - (i - zeroInd));
-                ub = min(ub, nums[i] + (i - zeroInd));
-            }
-            if (zeroInd - 1 >= 0)
-            {
-                lb = max(lb, nums[zeroInd - 1] - 1);
-                ub = min(ub, nums[zeroInd - 1] + 1);
-            }
-            unsigned long cnt = 0;
-            backTrack(nums, zeroInd, m, lb, ub, cnt);
-            // cout << lb << " " << ub << " " << cnt << endl;
-            // cout << cnt << " ";
-
-            if (ans == 0)
-                ans = (ans + cnt) % MOD;
-            else
-            {
-                ans = (ans * cnt) % MOD;
+                unsigned long newCost = dists[e.from] + e.cost;
+                if (e.to == n)
+                    costToTarget.push_back(newCost);
+                if (dists[e.to] > newCost)
+                {
+                    dists[e.to] = newCost;
+                }
             }
         }
     }
+    sort(costToTarget.begin(), costToTarget.end());
 
-    cout << ans;
+    for (int i = 0; i < k; i++)
+        cout << costToTarget[i] << " ";
 
     return 0;
 }
