@@ -158,7 +158,7 @@ In general, pattern B takes more time and memory because it allows redundant pus
 
 #### Directed Graph
 
-- DFS: Visited array + current_path array. current_path[i] = node i is in current stack.
+- DFS: (3 coloring: unvisited/visited/in current stack) Visited array + current_path array. current_path[i] = node i is in current stack.
         If we visited a node that is already in the path(stack), that means we have a cycle.
         We still can use visited array to skip visited node because as soon as we step into any nodes in the cycle,
         We will get a cycle. If we confirmed that we visited that node, but no cycle was detected, we can just skip exploring that node.
@@ -303,7 +303,8 @@ ex) Graph > 210
 - **_3 Things in mind_**
     1. Condition to keep the window size ex) subArray sum < X
     2. When should we shrink and when should we stop? (break while) ex) subArray sum >= X
-    3. How to get what we want from start,end indices. ex) result += start, += end - start + 1
+    3. How to get what we want **from start,end indices.** ex) result += start, += end - start + 1, += start
+        => Playing with Indices to get the COUNT
     4. If I use catapillar method, once I push right and shrink left, do I need to move left back
        when I start a new phase with current right?
 - For counting, key is, how can we count something **without Dup and without iterating again**
@@ -317,8 +318,9 @@ ex) Graph > 210
   - Translating Problems to **_At Most K or Exactly K_** simplifies the problem!
 - Pattern
 
-```
+```Cpp
 while(end < N){
+    // Increasing end by 1 at a time makes it easier to compute the count for each ending index!
     do something; end++; (usually increase count or something)
     // For this end,
 

@@ -7,94 +7,95 @@
 using namespace std;
 
 /**
- * SINGLE SOURCE "K" SHORTEST PATH (including cycle)
+ * CYCLE FOUND IN DIRECTED/UNDIRECTED GRAPH
  *
- * Top K routes from 1 -> N
+ * Use DFS -> O(E) solution!
+ * Use node coloring: 3 states = Unvisited, visited, Instack
  *
- * Not DAG!! Unique Route INCLUDING cycle!
- * A route can visit the same city several times. => Can use the same edge multiple times
+ * We do not have to set visited node to unvisited to backtrack because
+ * if we go into cycle once, we will def get a cycle.
+ * If we confirmed that path does not make a cycle, we can conclude none of nodes in that path creates a cycle.
  *
- * Should aim to get top K route. If we want to get all route, -> will lead to inf loop since there could be a cycle!
- *
- * 1) DFS? -> Since graph has a cycle backTrack will go infinite
- * 2) Bellman Ford? -> How to tell the redundant paths? Also path with cycle.. how?
  */
-
-struct Edge
+typedef vector<vector<int>> Graph;
+enum STATE
 {
-  int to;
-  int cost;
+  UNVISITED,
+  VISITED,
+  INSTACK
 };
-
-struct Route
+// put initial starting point to stack
+void dfs(Graph &graph, int cur, vector<STATE> &status, vector<int> &cycle, bool &cycleFound, bool &isPartOfCycle)
 {
-  int to;
-  unsigned long cost;
-};
+  for (int neighbor : graph[cur])
+  {
+    if (status[neighbor] == UNVISITED)
+    {
+      status[neighbor] = INSTACK;
+      dfs(graph, neighbor, status, cycle, cycleFound, isPartOfCycle);
+    }
+    else if (status[neighbor] == INSTACK)
+    {
+      // cycle found
+      cycleFound = true;
+      cycle.push_back(neighbor); // neighbor is the cycle starting point
+      cycle.push_back(cur);      // inner cycle starts
+      isPartOfCycle = true;
+      return;
+    }
+    // VISITED, just skip
+
+    if (cycleFound)
+    {
+      if (isPartOfCycle)
+      {
+        cycle.push_back(cur);
+        if (cur == cycle[0])
+          isPartOfCycle = false; // came back to the beginning of the cycle
+      }
+      return;
+    }
+  }
+  status[cur] = VISITED;
+}
 
 int main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
-  const unsigned long MAX_COST = 3e14;
 
-  int n, m, k;
-  cin >> n >> m >> k;
+  int n, m;
+  cin >> n >> m;
 
-  vector<vector<Edge>> graph(n + 1);
-  vector<priority_queue<unsigned long>> topKdists(n + 1); // Store smallest K routes, MAX HEAP
-  topKdists[1].push(0);
-
+  vector<int> v;
+  Graph graph(n + 1);
+  vector<STATE> status(n + 1, UNVISITED);
+  vector<int> cycle;
   for (int i = 0; i < m; i++)
   {
-    int a, b, c;
-    cin >> a >> b >> c;
-    graph[a].push_back({b, c});
+    int from, to;
+    cin >> from >> to;
+    graph[from].push_back(to);
   }
-
-  auto comp = [](const Route &a, const Route &b)
-  { return a.cost > b.cost; };
-  priority_queue<Route, vector<Route>, decltype(comp)> pq(comp); // min Heap
-  pq.push({1, 0});
-
-  while (!pq.empty())
+  bool cycleFound = false, isPartOfCycle = false;
+  for (int i = 1; i <= n; i++)
   {
-    Route r = pq.top();
-    pq.pop();
-
-    // cout << r.cost << " ";
-
-    if (r.cost > topKdists[r.to].top()) // can't break into top k distance
-    {
+    if (status[i] == VISITED)
       continue;
-    }
-    // continue;
-    for (Edge &e : graph[r.to]) // (1 + E/V)
-    {
-      unsigned long newDist = r.cost + e.cost; // new distance from 1 -> r.to -> e.to
 
-      if (topKdists[e.to].size() < k || topKdists[e.to].top() > newDist) // better than the worst case
-      {
-        topKdists[e.to].push(newDist); // KlogK
-        if (topKdists[e.to].size() > k)
-        {
-          topKdists[e.to].pop();
-        }
-        pq.push({e.to, newDist});
-      }
+    status[i] = INSTACK;
+    dfs(graph, i, status, cycle, cycleFound, isPartOfCycle);
+
+    if (cycleFound)
+    {
+      cout << cycle.size() << "\n";
+      for (int i = cycle.size() - 1; i >= 0; i--)
+        cout << cycle[i] << " ";
+      return 0;
     }
   }
-  vector<unsigned long> v;
-  while (!topKdists[n].empty()) // O(KlogK)
-  {
-    v.push_back(topKdists[n].top());
-    // cout << topKdists[n].top() << " ";
-    topKdists[n].pop();
-  }
-  for (auto iter = v.rbegin(); iter != v.rend(); ++iter)
-  {
-    cout << *iter << " ";
-  }
+
+  cout << "IMPOSSIBLE\n";
 
   return 0;
 }

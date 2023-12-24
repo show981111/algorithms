@@ -49,3 +49,44 @@ public:
         return trap;
     }
 };
+
+/**
+ * Using two sweeps prefix
+ *
+ * Important observation:
+ * At index i, the amount we can trap is,
+ * min(Tallest Block from left, Tallest Block from right)
+ * So, How do we know the tallest hieght from both side? => Two sweeps
+ */
+
+class Solution
+{
+public:
+    int trap(vector<int> &height)
+    {
+        int trap = 0;
+        vector<int> left(height.size());
+        vector<int> right(height.size());
+        left[0] = height[0];
+        for (int i = 1; i < left.size(); i++)
+        {
+            left[i] = max(height[i], left[i - 1]);
+        }
+        cout << endl;
+        right.back() = height.back();
+        for (int i = right.size() - 2; i >= 0; i--)
+        {
+            right[i] = max(height[i], right[i + 1]);
+        }
+        // now compute how much we can trap
+        // Cant trap anything on the edge
+        for (int i = 1; i < height.size() - 1; i++)
+        {
+            int waterHeight = min(left[i], right[i]); // max water height we can trap
+            if (waterHeight > height[i])
+                trap += waterHeight - height[i];
+        }
+
+        return trap;
+    }
+};

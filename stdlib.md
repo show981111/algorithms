@@ -4,6 +4,11 @@
 
     => reverse from s.begin() to s.end();
 
+### Iterator
+
+    Iterator is just like a pointer. If the element that iterator refers to get erased,
+    that Iterator is an invalid iterator. Need to re-initialize. 
+
 ### nth_element(nums.begin(), nums.begin() + k - 1, nums.end(), greater<int>())
 
     1,3) Linear in std::distance(first, last) on average.

@@ -19,8 +19,8 @@ using namespace std;
  * Should aim to get top K route. If we want to get all route, -> will lead to inf loop since there could be a cycle!
  *
  * 1) DFS? -> Since graph has a cycle backTrack will go infinite
- * 2) Bellman Ford? -> How to tell the redundant paths? Also path with cycle.. how?
- * 3) Dijkstra? -> NO redundant route since it pushes into the queue when it finds a better distance
+ * 2) Bellman Ford? -> How to tell the redundant paths? -> How many iteration we should take? Since we can take the cycle multiple times
+ * 3) Dijkstra? -> NO redundant route since it pushes into the queue only if it finds a better distance
  */
 
 struct Edge
