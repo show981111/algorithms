@@ -425,3 +425,19 @@ A.Floyd's cycle detection algorithm (Two pointers)
         (1) If we get bigger value, all previous smaller values are useless (Decresing stack)
         (2) If we get a smaller value, all previous bigger values are uesless (Increasing stack)
     EX) Citadel-tagged/42,85,221,239
+
+## How to design a recursive function?
+
+1. Need to pass the value from child -> parent? : use return value
+2. Need to pass the value from parent -> child? : use parameter/ pass by reference
+
+## Get the biggest difference among all pairs
+
+ex) Maximum sum subarray with some restrictions (restricted length)
+<https://leetcode.com/problems/maximum-sum-circular-subarray/solutions/4538281/prefix-monotonic-deque-approach-o-n/>
+
+Use **monotonic stack/deque/queue!** and only stores values that is promising.
+As we proceed, throw away that is not promising.
+In above case, use increasing deque. Use front of the deque to get the smallest prefix.
+When push, pop all elements that are bigger than current prefix because when we try to get
+bigger subarray sum, we only need small prefix so we don't need big ones!
