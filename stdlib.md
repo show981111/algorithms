@@ -28,11 +28,16 @@
 
 - .erase(iterator), .remove(key): note that it erases all nodes with key
 
-### Priority_queue
+### Priority_queue / Heap
 
     Default max heap. It pop's from the back of the vector. So sorting in reverse order!
     - Min heap: priority_queue<int, vector<int>, greater<int>> pq;
     - Max heap: priority_queue<int, vector<int>, less<int>> pq;
+
+### Custom comparator
+
+    When define comparator with external data, be careful because 
+    equality is defined as `!comp(a,b) && !comp(b,a)`, which means `!(a < b) && !(b < a)` => `a == b`
 
 ### map & set => Bidirectional Iterator (not random access iterator)
 

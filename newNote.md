@@ -187,6 +187,36 @@ In general, pattern B takes more time and memory because it allows redundant pus
 ## Ordered Contaienr
 
 - Priority Queue : YES dups, Insert/Delete -> O(logn) (For adjusting HEAP)
+
+    **_When to use?_**
+  - When there are two standards to consider when sorting (Optimizing based on two variables).
+    Key intuition is, if we have two variables, we need to **FIX ONE**. Thus, we need to find a condition,
+    such that if we fix this one, can we use the result in next iteration (fix next element)?
+    EX) get min from X **such that** Y <= K. Or get min from range [0:i]
+    We can sort base array and as we traverse, we add/remove elems to priority queue. Then, we can get the min/max within that range!
+
+    ```Cpp
+    // From array X and Y, want to compute max of : (Y[y1] + ... + Y[yk]) * min(X[y1], ..., X[yk])
+    // Here, max answer depends on two components : (Y[y1] + ... + Y[yk]) & min(X[y1], ..., X[yk])
+    // We can increase either size to make the result big.
+    /*
+    1. One array is the base array that works as a BASE. (Fix BASE(one component), and maximize rest)
+        Key point of sorted condition array: items in [:i] should be available when i+1_th item is the base.
+            => This allows pushing elems to PQ as we go without violating constraints.
+    2. Perform Sliding Window on PQ to maintain the size of the window! => Key to O(NK) -> O(NlogN)
+    */
+    vector<int> X; vector<int> Y; vector<pair<int,int>> paired
+    sort(paired, X_ASCENDING) // sort in X descending 
+    priority_queue<int> pq; // PQ for Y elems 
+    For paired[i].X in paired: // X descending order. Thus, if we have paired[i].X ~ paired[i+j].X, paired[i+1].X should be the base since we take min min(X[y1], ..., X[yk]).
+        Set X[i] as a base. 
+        pq.push(paired[i].Y); 
+        // contains top K elements from 0 ~ i. At i+1_th iteration, these Y's are available since 
+        // corresponding X value of these Y are all bigger than i+1_th X. (paired[0 ~ i].X < paired[i+1].X)
+        Computer answer = runningSum * base
+    
+    ```
+
 - Ordered Set/map : NO dups, Insert/Delete -> O(logn) (Internally using balanced Tree)
 
 ## Dynamic Programming (Memoization)
@@ -309,11 +339,13 @@ ex) Graph > 210
        when I start a new phase with current right?
 - For counting, key is, how can we count something **without Dup and without iterating again**
   - Without Dup: How many of them when it ends at "end"? -> each case becomes unique that ends at "end" idx. ex) [1,2,3,4], arr that ends at 2 vs 3 vs 4 all unique, no redundant
+
   - Am I counting all? : Important thing is, after I move forward "start" for current "end", and I move "end" forward, is it okay to start "start" from the previous start? Would it impact counting of next End? => This is why we need a little heck to avoid re-iterating
+  
   - Without Iterating - Need some heck.
         EX) end - start + 1 (length == #subarray that contains item at "end")
         ex)[... {1,2,3} ...] -> {3}, {3,2}, {3,2,1}
-        or += start(after shrink) [1,2,3, ... N ...] -> {1~N}, {2~N}, {3 ~ N}
+        or += start(after shrink) [1,2,3, ... N ...] -> {1 ~ N}, {2 ~ N}, {3 ~ N}
   - **_Exatcly K = At most K - At most K-1_**
   - Translating Problems to **_At Most K or Exactly K_** simplifies the problem!
 - Pattern
@@ -384,8 +416,9 @@ A.Floyd's cycle detection algorithm (Two pointers)
 
 ### Bellman Ford: Shortest/Longest path for DAG
 
-    Bellman ford is a DP algorithm where **T(target, i) = The shortest path from the source to target using i number of edges**.
-    Unless there is a negative weight cycle, we can find the shortest path. If there is a negative cycle, the shortest path can be -INF anyways.
+    Bellman ford is a DP algorithm where 
+`T(target, i) = The shortest path from the source to target using i number of edges`
+    Unless there is a **negative** weight cycle (positive cycle doesn't matter), we can find the shortest path. If there is a negative cycle, the shortest path can be -INF anyways.
     Similarly, we can find the longest path unless there is a positive cycle.
 
     For edge = (x,target)
@@ -441,3 +474,10 @@ As we proceed, throw away that is not promising.
 In above case, use increasing deque. Use front of the deque to get the smallest prefix.
 When push, pop all elements that are bigger than current prefix because when we try to get
 bigger subarray sum, we only need small prefix so we don't need big ones!
+
+## Subsequence/subset questions
+
+- Try DP: **LCS** pattern if sequence should be ordered
+            or **knapsack(0/1)** if there is a restriction and it is not ordered(subset).
+- Try sort/heap: if order doesn't matter, we can sort them
+- Try BackTrack: no other options... try all possible subsets/subsequences
