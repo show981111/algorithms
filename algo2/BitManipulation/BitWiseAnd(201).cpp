@@ -8,10 +8,29 @@
 class Solution
 {
 public:
+    /*
+    How many rightmost bits we can erase?
+    It is known that k & (k-1) will remove the rightmost bit of k
+    */
     int rangeBitwiseAnd(int left, int right)
     {
+        // O(32) since there are total 32 bits we can remove
         while (left < right)
+        {
+            // starting from right, proceed until left < right
+            // if right - 1 is in [left, right]
+            // we can for sure remove the rightmost bit.
+            // So, no need to explore [right & (right - 1) ~ right -1]
+            // go straight to right & (right - 1)
+            // if left == right, should just return right since right -1 is not in the range
             right = right & (right - 1);
+        }
+        // Equivantely
+        // while (left <= right - 1)
+        // {
+        //     right = right & (right - 1);
+        // }
+        // return right;
         return right;
     }
 };

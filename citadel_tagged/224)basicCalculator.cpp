@@ -6,7 +6,7 @@ public:
     => 1 4 5 + 2 + + 3 - 6 8 + +
     3 - 1 * 2 + 5
 
-    3 1 2 * - 5
+    3 1 2 * - 5 +
     Its num: just concat to string
     Its Op: add to opStack. If existing op is high priority, pop them. If not, just push
     If Par: Just push par to op. If we see closing par, pop operands until we see the closing par!

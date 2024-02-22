@@ -1,6 +1,13 @@
 class Solution
 {
 public:
+    /*
+    Divide & Conquer: if x is the major, x should be a major of left half or right half
+    Total N elem. if x is not a major if left and right.
+    L_maj > n/4
+    R_maj > n/4
+    So, L_maj + R_maj > n/2, Thus, x cannot be a major
+    */
     int getMaj(vector<int> &nums, int start, int end)
     {
         if (start == end)

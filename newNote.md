@@ -65,6 +65,13 @@ get what we want from children and merge the result
 
 ## Graph Traversal
 
+### DFS (Recursion)
+
+**ONE INVARIANT IN DFS: Traverse all paths from starting point + its children**\
+If we call dfs from (r,c) it traverse all paths from (r,c) and its children\
+Thus, if we computed something from (r,c) than it should be optimal for (r,c) and its children.\
+=>**No need to do dfs again for children of (r,c)**: Important for memoization
+
 ### BFS
 
 WHERE SHOULD WE CHECK VISITED?
@@ -251,9 +258,22 @@ In general, pattern B takes more time and memory because it allows redundant pus
   - IF we have infinite per each item, even though we used current item, we can still use current item(0 ~ i_th item).
     - So, T(N, i) = T(N - value[i], i) + T(N, i-1)
 
+### Subset vs Subsequence
+
+- Subset: 0/1, don't care about the index ordering. EX) [5,3,1,4,8], can choose {8,5,4} == {4,5,8}
+- Subsequence: also 0/1, but should ensure the index ordering [3,4,8], [5,4,8], but cant mix them up
+- Subsequence -> Subset?: when we can re-arrange the picked subset based on index ordering. EX) after we picked {8,5,4} we re-arrange them ti [5,4,8]
+
 ### LIS Pattern (Subsequence == Subset with ordering)
 
 - Also subset problem, but with ordering
+- Cannot convert to subset problem since after we pick the subset, we cannot re-arrange based on index.\
+EX) [5,3,1,4,8] => {4,5,8} -> [5,4,8] (based on index) breaks the LIS restriction
+- **Does T(i)'s optimal solution should be included in T(i+k)'s optimal solution?** \
+    EX) check 1239 thought process
+- Important restriction is the **ordering**
+- Subesequence here, we cannot re-order items as we want after we pick, since we can only reorder them in an increasing order & increasing index order
+- **BE CAREFUL OF TIE**. IF there are multiple subsequence that makes max T(i). Can I pick anything? or does it affect the answer?
 
 - ## Typical pattern is, get the desired value when we **include i_th element**
 
@@ -414,23 +434,26 @@ A.Floyd's cycle detection algorithm (Two pointers)
 - Proceed each pointer one step at a time. Then they will meet at the entrypoint of cycle!!
     (ref) <https://www.youtube.com/watch?v=PvrxZaH_eZ4&ab_channel=Insidecode>
 
-### Bellman Ford: Shortest/Longest path for DAG
+### Bellman Ford: Shortest/Longest path for WEIGHTED DAG
 
-    Bellman ford is a DP algorithm where 
+Bellman ford is a DP algorithm where
 `T(target, i) = The shortest path from the source to target using i number of edges`
-    Unless there is a **negative** weight cycle (positive cycle doesn't matter), we can find the shortest path. If there is a negative cycle, the shortest path can be -INF anyways.
-    Similarly, we can find the longest path unless there is a positive cycle.
+Unless there is a **negative** weight cycle (positive cycle doesn't matter), we can find the shortest path. If there is a negative cycle, the shortest path can be -INF anyways.
+Similarly, we can find the longest path unless there is a positive cycle.
 
-    For edge = (x,target)
-    T(target, i) = min(T(x,i-1) + weight) => Shortest distance to x using i-1 edges + current edge's weight which can take us to "target."
-    ex) Graph > Bellman Ford > CSES.
+For edge = (x,target)
+T(target, i) = min(T(x,i-1) + weight) => Shortest distance to x using i-1 edges + current edge's weight which can take us to "target."
+ex) Graph > Bellman Ford > CSES.
 
-    ```Python
-    For cnt in Total number of edgs:
-        For edge in Edges:
-            T(edge.to, cnt) = min(T(edge.to, cnt), T(edge.from, cnt -1) + edge.weight)
-                                                    # Using current edge to update the distance
-    ```
+```Python
+For cnt in Total number of edgs:
+    For edge in Edges:
+        T(edge.to, cnt) = min(T(edge.to, cnt), T(edge.from, cnt -1) + edge.weight)
+                                                # Using current edge to update the distance
+```
+
+**NOTE: For unweighted, just use DFS/BFS will give us O(V+E) runtime.** \
+DFS with memoization (memo T(v) = longest path from v) or BFS can be used for shortest path
 
 ### SPFA (BFS version of Bellmand Ford)
 
@@ -477,7 +500,8 @@ bigger subarray sum, we only need small prefix so we don't need big ones!
 
 ## Subsequence/subset questions
 
-- Try DP: **LCS** pattern if sequence should be ordered
+- Subsequence -> subset possible? : If we can rearrange the subset we chose based on the index, then we can do this. EX) [1,4,3,2,5] -> {5,4,3} (subset we chose) -> re-arrange {3,4,5} based on index. is it possible? For LIS, its not possible since it should be re-arranged to [3,4,5] but index of 4 < index of 3.
+- Try DP: **LIS/LCS** pattern if sequence should be ordered
             or **knapsack(0/1)** if there is a restriction and it is not ordered(subset).
 - Try sort/heap: if order doesn't matter, we can sort them
 - Try BackTrack: no other options... try all possible subsets/subsequences
