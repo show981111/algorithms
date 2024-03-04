@@ -26,3 +26,50 @@ public:
         return tempHead->next;
     }
 };
+
+/**
+ * Or if we know the size, we can do lots of stuff for linked list!
+ */
+
+class Solution
+{
+public:
+    ListNode *deleteAt(ListNode *head, int targetIndex)
+    {
+        ListNode *cur = head;
+        ListNode *prev = cur;
+        int idx = 0;
+        while (idx < targetIndex)
+        {
+            prev = cur;
+            cur = cur->next;
+            idx++;
+        }
+        ListNode *victim, *newHead = head;
+        if (targetIndex == 0)
+        {
+            newHead = head->next;
+            victim = head;
+        }
+        else
+        {
+            victim = cur;
+            prev->next = cur->next;
+        }
+        delete victim;
+        return newHead;
+    }
+    ListNode *removeNthFromEnd(ListNode *head, int n)
+    {
+        int length = 0;
+        ListNode *cur = head;
+
+        while (cur != nullptr)
+        {
+            cur = cur->next;
+            length++;
+        }
+        int deleteIndex = length - n;
+        return deleteAt(head, deleteIndex);
+    }
+};
