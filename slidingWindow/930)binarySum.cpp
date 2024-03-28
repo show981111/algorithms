@@ -1,6 +1,21 @@
 /**
  * @brief
+ * Sliding window is tricky to decide when we should stop shrinking.
+ * In this case, should we stop to keep the minimum size window that the sum == goal?
+ * or should we stop to keep the window largest size that sum < goal
  *
+ * This case, later is much easier to compute, since we can avoid the duplicate counts.
+ * EX)
+ * [0,<1,0,1,0>] target = 2
+ * If the right is 0, we concat 0 to previous subarrays to make the goal.
+ * So we already counted <1,0,1,0>
+ *
+ * Now, when we shrink window, we double count <1,0,1,0> since it is target sum!
+ *
+ * So invariant of the window => largest size window that sum < goal ends at "END"
+ * This way, we count everything we need in that window, but at the same time no duplicate counts
+ * since the target sum will be smaller than the goal when we include a new elem.
+ * (target sum can only be achieved by including a new elem)
  */
 class Solution
 {
@@ -38,6 +53,9 @@ public:
                     cnt++;
                 curSum -= nums[start++];
             }
+            // Now curSum < goal or start == end.
+            // so only way to achieve the goal is by adding a new elem =>
+            //      can prevent duplicate counting when shrinking the window of next elem!
             prevCount = cnt - tmpCnt;
             // cout << prevCount << " ";
         }

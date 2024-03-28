@@ -505,3 +505,14 @@ bigger subarray sum, we only need small prefix so we don't need big ones!
             or **knapsack(0/1)** if there is a restriction and it is not ordered(subset).
 - Try sort/heap: if order doesn't matter, we can sort them
 - Try BackTrack: no other options... try all possible subsets/subsequences
+
+## Binary search
+
+When we can for sure throw away the half without going through, we can use binary search.
+Need to decide
+
+- How do we know we can for sure throw away the half?
+- Which half should we go searching?
+
+However, Binary search is not just slicing an array. It can be a **GUESS** method. For example,
+guess the number I am thinking between 1 and 20. Use bin search to guess the number!

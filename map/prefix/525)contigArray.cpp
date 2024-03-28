@@ -22,6 +22,22 @@ what we are looking for.
 // sum[0:j] - target = sum[0:i] -> we are looking for this i.
 */
 
+/*
+Why not sliding window?
+
+Problem is, per each end, we need go move the left back so that we can increase the window
+EX)
+0 0 1 1 0 0 0 1 1 1
+L.            R
+Need to shrink so that we can get 1 1 0 0 0 1
+0 0 1 1 0 0 0 1 1 1
+    L         R
+0 0 1 1 0 0 0 1 1 1
+    L             R
+Now we need to move L back to get 0 0 1 1 0 0 0 1 1 1
+0 0 1 1 0 0 0 1 1 1
+L                 R
+*/
 class Solution
 {
 public:

@@ -78,3 +78,46 @@ public:
         return binSearch(nums, 0, nums.size() - 1);
     }
 };
+
+class Solution
+{
+public:
+    /*
+    Consider the value as a next node, and each index as a node.
+    Then, we can use cycle detection algorithm!
+    EX)
+    [1,3,4,2,2]
+    Idx: next Idx as a value
+    0: 1
+    1: 3
+    2: 4
+    3: 2
+    4: 2
+    0 -> 1 -> 3 -> 2 -> 4 - > 2
+    */
+    int findDuplicate(vector<int> &nums)
+    {
+        int slow = 0;
+        int fast = 0;
+
+        do
+        {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+
+            if (fast >= nums.size())
+            {
+                return -1; // no cycle
+            }
+        } while (slow != fast);
+
+        // now find the entry point.
+        slow = 0;
+        while (slow != fast)
+        {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+};

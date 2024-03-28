@@ -19,21 +19,25 @@ public:
     {
         sort(points.begin(), points.end(), [](vector<int> &a, vector<int> &b)
              { return a[0] < b[0]; });
-        int n = 1;
-        int cur = 0;
+
+        int idx = 0;
+        int dot = 0;
         for (int i = 1; i < points.size(); i++)
         {
-            if (points[cur][1] < points[i][0])
+            if (points[idx][1] >= points[i][0])
             {
-                cur++;
-                swap(points[cur], points[i]);
-                n++;
+                // overlaps! can burst with one dot
+                points[idx][1] = min(points[idx][1], points[i][1]);
+                // should set it to min since points[i] will not burst if we go over points[i][1]
             }
             else
             {
-                points[cur][1] = min(points[cur][1], points[i][1]);
+                // not overlap!
+                idx++;
+                swap(points[idx], points[i]);
+                // Now i_th is at the top of idx
             }
         }
-        return cur + 1; // 0-index
+        return idx + 1;
     }
 };

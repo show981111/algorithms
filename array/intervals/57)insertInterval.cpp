@@ -76,6 +76,7 @@ public:
             if (intervals[cur][1] < intervals[i][0])
             { // no overlap
                 cur++;
+                // bring i_th elem to the cur pointer. All elems between (cur, i) are already merged so useless.
                 swap(intervals[cur], intervals[i]);
             }
             else
@@ -87,3 +88,33 @@ public:
         return intervals;
     }
 };
+
+/**
+ *
+ * Using stdlib
+ */
+
+vector<vector<int>> insert(vector<vector<int>> &intervals, vector<int> &newInterval)
+{
+    auto iter = lower_bound(intervals.begin(), intervals.end(), newInterval, [](const vector<int> &a, const vector<int> &b)
+                            { return a[0] < b[0]; });
+    intervals.insert(iter, newInterval);
+
+    int idx = 0;
+    for (int i = 1; i < intervals.size(); i++)
+    {
+        if (intervals[idx][1] < intervals[i][0])
+        {
+            idx++;
+            swap(intervals[idx], intervals[i]);
+        }
+        else
+        {
+            intervals[idx][1] = max(intervals[idx][1], intervals[i][1]);
+        }
+    }
+
+    intervals.erase(intervals.begin() + idx + 1, intervals.end());
+
+    return intervals;
+}
