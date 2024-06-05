@@ -5,6 +5,9 @@ CXXFLAGS ?= -Werror -pedantic -g --std=c++17 -fsanitize=address -fsanitize=undef
 test: play.exe 
 	./play.exe < input.in
 
+tests: play.exe 
+	./play.exe < ./tests/input*.in
+
 custom: play.exe 
 	./play.exe < test_input.txt
 # Compile the main executable

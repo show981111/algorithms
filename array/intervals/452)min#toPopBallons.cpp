@@ -13,6 +13,7 @@ public:
         So we can merge intervals, but should shorten the interval to the overlaping interval.
 
     Now the goal is to create shortest array after merging all intervals.
+    Merging will lead to a shortest array.
     Merging Intervvals => Sorting
     */
     int findMinArrowShots(vector<vector<int>> &points)

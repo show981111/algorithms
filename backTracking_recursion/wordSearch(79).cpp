@@ -1,3 +1,21 @@
+/*
+TC: O(M*N*4^L) where M is n_rows, N is n_cols and L is the word length. Since branching factor is 4, we do dfs max 4^L
+
+Why we need to backtrack? Can we just leave it as visited?
+
+c a b
+a a a
+
+Looking for aab.
+We cannot leave it as visited. Need to backtrack for future's visit.
+We do visit all possible places from starting point,
+but if starting point can actually become a middle point for the answer,
+then we miss out that path if we leave it as visited.
+Important assumption is that when we do dfs from starting point,
+we assume that the word should begin at the starting point which is not true.
+(at (0,2) we do dfs from 'a' assume 'a' is the beginning, but it isn't true)
+*/
+
 class Solution
 {
 public:

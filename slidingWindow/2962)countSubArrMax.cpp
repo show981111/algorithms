@@ -1,3 +1,43 @@
+class Solution
+{
+public:
+    /*
+    "At least" -> Subarray that end at i+1 can include any subarray that ends at i to build something
+    Push right. Perform count.
+    As long as cnt >= k, shrink left, and increase answer. => Unique satisfying subarray that ending at i.
+    Now in the window, cnt < k, which means every time we include nums[i], it will make cnt ==k, and it will
+    be a unique subarray that "i"_th elem can build.
+    */
+    long long countSubarrays(vector<int> &nums, int k)
+    {
+        long long ans = 0;
+        long long prevCnt = 0;
+        int maxVal = 0;
+        for (int n : nums)
+            maxVal = max(maxVal, n);
+        int maxValCnt = 0;
+        int left = 0, right = 0;
+        while (right < nums.size())
+        {
+            int curCnt = prevCnt;
+            // count that can be built by concatenating current elem to previously satisfying subarrs.
+            if (nums[right++] == maxVal)
+                maxValCnt++;
+
+            while (maxValCnt >= k)
+            {
+                // unqiue count that can only be built by including current elem
+                // since window is kept to have < k amount of maxVal (invariant).
+                curCnt++;
+                if (nums[left++] == maxVal)
+                    maxValCnt--;
+            } // Now, maxValCnt < k
+            ans += curCnt;
+            prevCnt = curCnt;
+        }
+        return ans;
+    }
+};
 /**
  * When using a catapilar,
  * move right by one step at a time!

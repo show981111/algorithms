@@ -400,6 +400,16 @@ while(end < N){
     if we have [1,4,3,2,0], missing number is 5.
     So, (1^4^3^2^0)^(0^1^2^3^4^5) = (0^0)^(1^1)^(2^2)^(3^3)^(4^4)^(5) = 0^0^0^0^0^5 = 5
 
+### Get Rightmost bit
+
+- X & -X : In order to convert X to -X, what we do is, flip everything until we meet the rightmost set bit.
+EX) 0100110 -> 1011010 Thus, if we AND them together, all bits left to the rightmost set bit will be erased!
+
+### Remove rightmost bit
+
+- X & (X - 1) : If we subtract 1 from X, all bits including and right to the rightmost set bit will be fliped
+EX) 1011000 -> 1010111
+
 ## Monotonic Queue (Using Deque)
 
 - Monotonic Queue

@@ -13,26 +13,26 @@ using namespace std;
  */
 int main()
 {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-  string input;
-  cin >> input;
+    string input;
+    cin >> input;
 
-  const string hello = "hello";
-  int ind = 0;
-  for (int i = 0; i < input.size(); i++)
-  {
-    if (input[i] == hello[ind])
+    const string hello = "hello";
+    int ind = 0;
+    for (int i = 0; i < input.size(); i++)
     {
-      ind++;
-      if (ind == hello.size())
-      {
-        cout << "YES";
-        return 0;
-      }
+        if (input[i] == hello[ind])
+        {
+            ind++;
+            if (ind == hello.size())
+            {
+                cout << "YES";
+                return 0;
+            }
+        }
     }
-  }
-  cout << "NO";
-  return 0;
+    cout << "NO";
+    return 0;
 }

@@ -1,6 +1,64 @@
 class Solution
 {
 public:
+    /*
+    Push right once at a time.
+    If we reach k number of different integers, shrink left and count subarrs until it becomes == k.
+    We should keep the windowto the minimum size that contains exactly "k" numbers, so that
+    we can tell if we can concat the next integer to make a new good subarray (to check if that number
+    is already in the window to make a good array)
+    Move right, if that number is already included num, we concat this number to prev subarr!
+
+    [1,2,|1|,]
+    */
+    int subarraysWithKDistinct(vector<int> &nums, int k)
+    {
+        int goodArrayCnt = 0;
+        int prevCnt = 0;
+        unordered_map<int, int> freq;
+        int left = 0, right = 0;
+
+        while (right < nums.size())
+        {
+            int curCnt = 0;
+            int n = nums[right++];
+            if (freq.count(n) > 0 && prevCnt > 0)
+            {
+                // including this number doesn't affect previous good subarray that ends at i-1.
+                // Due to this, we need to maintain the window to include exactly k integers(but minimum size)
+                curCnt += (prevCnt - 1);
+            }
+            freq[n]++;
+
+            while (freq.size() >= k)
+            {
+                if (freq.size() == k)
+                {
+                    curCnt++;
+                }
+                int l = nums[left];
+                if (freq.size() == k && freq[l] == 1)
+                {
+                    break; // minimum window size with freq.size() ==k
+                }
+                else
+                {
+                    freq[l]--;
+                    if (freq[l] == 0)
+                        freq.erase(l);
+                }
+                left++;
+            }
+            goodArrayCnt += curCnt;
+            prevCnt = curCnt;
+        }
+        return goodArrayCnt;
+    }
+};
+
+class Solution
+{
+public:
     int atMostK(vector<int> &nums, int k)
     {
         unordered_map<int, int> mp;
